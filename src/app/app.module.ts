@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
+import { TicketmodalComponent } from './components/ticketmodal/ticketmodal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HeaderComponent } from './components/header/header.component';
     ProfileComponent,
     SettingsComponent,
     SidebarComponent,
-    HeaderComponent
+    HeaderComponent,
+    TicketmodalComponent
   ],
   imports: [
     BrowserModule,

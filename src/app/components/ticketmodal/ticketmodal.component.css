@@ -1,0 +1,11 @@
+tr{
+    padding-bottom: 10em !important;
+    min-height: 2em  !important;  
+}
+
+table {
+    border-collapse:separate; 
+    border-spacing: 0 0.75em;
+  }
+
+tr:nth-child(odd) {background: rgba(0, 0, 0, 0.05);}
