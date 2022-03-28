@@ -10,6 +10,11 @@ export class ProfileComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.changeNavLink();
   }
 
+  changeNavLink = () => {
+    document.querySelectorAll(".active").forEach(item=>item.classList.remove("active"));
+    document.querySelector('#profile')?.classList.add('active');
+  }
 }

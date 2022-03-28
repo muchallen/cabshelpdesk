@@ -13,6 +13,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TicketmodalComponent } from './components/ticketmodal/ticketmodal.component';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TicketmodalComponent } from './components/ticketmodal/ticketmodal.compo
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MDBBootstrapModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
