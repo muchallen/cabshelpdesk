@@ -49,3 +49,20 @@ input{width: 100%;}
 .bxs-badge-check {
     font-size: 90px
 }
+
+.select-item{
+    width: 100%;
+    border-radius:5px; padding: 0.3em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;; border:none
+}
+
+.select-item>option{
+    background-color: #ccc;
+    color: black;
+    border-radius: 10px;
+}
+
+.select-item>option:hover{
+    background-color: #17AD37 !important;
+    color: white;
+    border-radius: 10px;
+}
