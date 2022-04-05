@@ -1,4 +1,5 @@
 export interface Ticket {
+    id:                      string;
     dateCreated:             Date;
     lastUpdated:             string;
     closedAt:                string;
@@ -6,7 +7,7 @@ export interface Ticket {
     assignee:                string;
     escalationLevel:         string;
     ticketStatus:            string;
-    estimatedResolutionTime: Date;
+    estimatedResolutionTime: string;
     actualResolutionTime:    number;
     dailyReportSent:         boolean;
     name:                    string;

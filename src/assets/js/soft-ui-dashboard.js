@@ -263,12 +263,12 @@ function navbarBlurOnScroll(id) {
       if (window.scrollY > scrollDistance) {
         blurNavbar();
       } else {
-        transparentNavbar();
+        //transparentNavbar();
       }
     }, 10);
   } else {
     window.onscroll = debounce(function() {
-      transparentNavbar();
+      //transparentNavbar();
     }, 10);
   }
 

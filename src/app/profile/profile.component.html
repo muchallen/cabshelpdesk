@@ -64,12 +64,12 @@
       <!-- End Navbar -->
       <div class="container-fluid py-4">
         <div class="row">
-          <div class="col-12 col-xl-4">
+          <div class="col-sm-12 col-md-6">
             <div class="card h-100">
               <div class="card-header pb-0 p-3">
                 <div class="row">
                   <div class="col-md-8 d-flex align-items-center">
-                    <h6 class="mb-0">Profile Information</h6>
+                    
                   </div>
                 </div>
               </div>
@@ -80,27 +80,71 @@
                 <div class="profile-img  mb-2">
                   <div class="row">
                     <div class="col-auto">
-                      <div class="avatar avatar-xl position-relative">
-                        <img src="../assets/img/bruce-mars.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
-                      </div>
+                      
                     </div>
                     </div>
                 </div>
-                <ul class="list-group">
-                  <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Full Name:</strong> &nbsp; user name</li>
-                  <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; user@oldmutal.co.zw</li>
-                  <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Business Unit:</strong> &nbsp; CABS</li>
-                  <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark"> Position:</strong> &nbsp; Softaware Engineer</li>
-                  
-                  <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Status:</strong> &nbsp; <select class="select-item"><option>Available</option>
-                    <option>Away</option>
-                    <option>Busy</option>
-                  </select></li>
+                <ul class="">
+                  <div class="">
+
+                    <table>
+                      <thead>
+                        <th  class="col-6"></th>
+                        <th class="col-6"></th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <h6 class="mb-0">Profile Information</h6>
+                          </td>
+                          <td></td>
+                         
+                        </tr>
+                        <br>
+                        <tr>
+
+                          <td><div class="avatar avatar-xl position-relative">
+                            <img src="../assets/img/bruce-mars.jpg" alt="profile_image" class="w-100 border-radius-lg shadow-sm">
+                          </div></td>
+                          <td></td>
+                        </tr>
+                        <br>
+                        <tr>
+                          <td class="fw-bold mr-1">First Name: </td>
+                          <td class="ml-2"> {{user.firstname}}</td>
+                        </tr>
+                        <tr>
+                          <td class="fw-bold mr-1">Last Name: </td>
+                          <td class="ml-2"> {{user.lastname}}</td>
+                        </tr>
+                        <tr>
+                          <td class="fw-bold mr-1">Username: </td>
+                          <td class="ml-2"> {{user.omUsername}}</td>
+                        </tr>
+                        <tr>
+                        <td class="fw-bold mr-1">Email: </td>
+                        <td class="ml-2 "> {{user.email}}</td>
+                      </tr>
+                      <tr>
+                        <td class="fw-bold mr-1">Role: </td>
+                        <td class="ml-2"> {{user.role}}</td>
+                      </tr>
+                      <tr>
+                        <td class="fw-bold mr-1">Ticket Count: </td>
+                        <td class="ml-2"> {{user.ticketCount}}</td>
+                      </tr>
+                      <tr>
+                        <td class="fw-bold mr-1">Status: </td>
+                        <td class="ml-2"> Available</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                </div>
                 </ul>
               </div>
             </div>
           </div>
-          <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+          <div class="col-sm-12 col-md-6 mb-md-0 mb-4">
             <div class="">
               <div class="card-body px-0 pb-2">
                 <div class="row">
@@ -110,7 +154,7 @@
                         <div class="row">
                           <div class="col-8 m-2">
                             <div class="numbers">
-                              <p class="text-sm mb-0 text-capitalize font-weight-bold">All Tickets</p>
+                              <p class="text-sm mb-0 text-capitalize  fs-4">All Tickets</p>
                               <h5 class="font-weight-bolder mb-0">
                                 1028
                                
@@ -134,10 +178,9 @@
                         <div class="row">
                           <div class="col-8 m-2">
                             <div class="numbers">
-                              <p class="text-sm mb-0 text-capitalize font-weight-bold">Unresolved </p>
+                              <p class="text-sm mb-0 text-capitalize  fs-5">Unresolved </p>
                               <h5 class="font-weight-bolder mb-0">
-                                65
-                                
+                                65 
                               </h5>
                             </div>
                           </div>
@@ -157,7 +200,7 @@
                         <div class="row">
                           <div class="col-8 m-2">
                             <div class="numbers">
-                              <p class="text-sm mb-0 text-capitalize font-weight-bold">Resolved </p>
+                              <p class="text-sm mb-0 text-capitalize  fs-4">Resolved </p>
                               <h5 class="font-weight-bolder mb-0">
                                 65
                                 
@@ -180,7 +223,7 @@
                         <div class="row">
                           <div class="col-8 m-2">
                             <div class="numbers">
-                              <p class="text-sm mb-0 text-capitalize font-weight-bold">Escalations </p>
+                              <p class="text-sm mb-0 text-capitalize  fs-4">Escalations </p>
                               <h5 class="font-weight-bolder mb-0">
                                 65
                                 

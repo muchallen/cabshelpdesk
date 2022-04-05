@@ -17,6 +17,7 @@ export class TableComponent  implements OnInit, AfterViewInit {
   headElements = ['Ticket Type', 'Client Name','Status','Description'];
   searchText: string = '';
   selectedTicket:Ticket={
+    id:'',
     dateCreated:new Date,
     lastUpdated:'',
     closedAt:'',
@@ -24,7 +25,7 @@ export class TableComponent  implements OnInit, AfterViewInit {
     assignee:'',
     escalationLevel:'',
     ticketStatus:'',
-    estimatedResolutionTime: new Date,
+    estimatedResolutionTime: "",
     actualResolutionTime:    0,
     dailyReportSent: false,
     name:'',

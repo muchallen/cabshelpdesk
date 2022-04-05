@@ -1,3 +1,8 @@
 .select-item{
     margin: 0.5em; border-radius:5px; padding: 0.1em;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;; border:none
   }
+
+  .numbers>p{
+    font-size: small!important;
+    font-weight: 300;
+  }

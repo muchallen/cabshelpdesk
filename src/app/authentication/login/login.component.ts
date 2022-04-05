@@ -1,22 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Route, Router } from '@angular/router';
+
 import { ServicesService } from 'src/app/shared/services.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  loading:boolean=false;
+  errorText=false;
+  constructor(private services: ServicesService, private router:Router) {}
 
-  constructor(private services:ServicesService) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onSubmit(data: NgForm) {
-    console.log(data.value)
-    this.services.signInUser(data.value).subscribe(res=>console.log(res),err=>console.log(err),()=>alert("complete"))
+    this.loading=true
+   
+    console.log(data.value);
+    this.services.signInUser(data.value).subscribe(
+      (res) => {
+        localStorage.setItem('user',JSON.stringify(res))
+        this.router.navigate(['']);
+      },
+      (err) =>{
+          this.errorText=true
+          this.loading=false
+      } ,
+      () => {}
+    );
   }
-
 }

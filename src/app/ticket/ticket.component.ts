@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Ticket } from '../shared/models/Ticket';
+import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
 
 @Component({
@@ -10,6 +11,7 @@ import { ServicesService } from '../shared/services.service';
 })
 export class TicketComponent implements OnInit {
   ticket: Ticket={
+    id:'',
     dateCreated:new Date,
     lastUpdated:'',
     closedAt:'',
@@ -17,7 +19,7 @@ export class TicketComponent implements OnInit {
     assignee:'',
     escalationLevel:'',
     ticketStatus:'',
-    estimatedResolutionTime: new Date,
+    estimatedResolutionTime: "",
     actualResolutionTime:    0,
     dailyReportSent: false,
     name:'',
@@ -26,6 +28,7 @@ export class TicketComponent implements OnInit {
     businessUnit:'',
     description:''
   } ;
+  AllUsers:User[]=[]
   constructor(private services:ServicesService) { 
     
   }
@@ -33,6 +36,8 @@ export class TicketComponent implements OnInit {
   ngOnInit(): void {
     this.changeNavLink();
     this.ticket= this.services.selectedTicket
+    this.getAllUsers();
+    
   }
   changeNavLink = () => {
     document.querySelectorAll(".active").forEach(item=>item.classList.remove("active"));
@@ -40,9 +45,8 @@ export class TicketComponent implements OnInit {
   }
 
   handleEscalate(val:NgForm){
-   const escalation = {...val.value, id:12933992}
-   console.log(escalation)
-   this.services.escalateTicket(escalation).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
+  
+   this.services.escalateTicket(val.value).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
    
   }
 
@@ -52,11 +56,22 @@ export class TicketComponent implements OnInit {
   }
 
   handleDelete(){
-    this.services.deleteTicket("").subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
+    this.services.deleteTicket(this.ticket.id).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
   }
 
   handleResolve(){
     this.services.reassignTicket("").subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
+  }
+
+  getAllUsers(){
+    this.services.getAllUsers().subscribe(res=>this.AllUsers=res,err=>console.log(err),()=>console.log("done getting users"))
+  }
+
+  onChange(data:any){
+    console.log(data.value)
+    let User =[]
+
+      User= this.AllUsers.filter(user=>user.firstname)
   }
 
 }

@@ -13,6 +13,7 @@ import { User } from './models/User';
 export class ServicesService {
 
   selectedTicket:Ticket ={
+    id:'',
     dateCreated:new Date,
     lastUpdated:'',
     closedAt:'',
@@ -20,7 +21,7 @@ export class ServicesService {
     assignee:'',
     escalationLevel:'',
     ticketStatus:'',
-    estimatedResolutionTime: new Date,
+    estimatedResolutionTime: "" ,
     actualResolutionTime:    0,
     dailyReportSent: false,
     name:'',
@@ -59,7 +60,7 @@ export class ServicesService {
   }
 
   deleteTicket(id:string){
-    return this.http.delete(this.url+'/internal/deleteticket',this.httpOptions)
+    return this.http.delete(this.url+'/internal/deleteticket/'+id,{...this.httpOptions, params:{id}})
   }
 
   escalateTicket(data:any){
@@ -72,6 +73,10 @@ export class ServicesService {
 
   resolveTicket(data:any){
     return this.http.post(this.url+'/internal/resolve',data,this.httpOptions)
+  }
+
+  getAllUsers():Observable<User[]>{
+    return this.http.get<User[]>(this.url+'users/all', this.httpOptions)
   }
 
 }

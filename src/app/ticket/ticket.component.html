@@ -166,7 +166,9 @@
               
                 <div class="form-group p-3">
                   <label for="">Email</label>
-                  <input type="text" class="form-control" ngModel name="email" #email="ngModel" >
+                  <select class="select-item"  ngModel name="assignee" (change)="onChange($event.target)" #assignee="ngModel" >
+                    <option *ngFor="let user of AllUsers; let i = index">{{user.firstname}} {{user.lastname}}</option>
+                  </select>
                 </div>
                 </div>
   
