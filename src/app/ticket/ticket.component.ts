@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
@@ -29,7 +30,7 @@ export class TicketComponent implements OnInit {
     description:''
   } ;
   AllUsers:User[]=[]
-  constructor(private services:ServicesService) { 
+  constructor(private services:ServicesService, private router:Router) { 
     
   }
 
@@ -56,7 +57,10 @@ export class TicketComponent implements OnInit {
   }
 
   handleDelete(){
-    this.services.deleteTicket(this.ticket.id).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
+    this.services.deleteTicket(this.ticket.id).subscribe(res=> {
+      console.log(res)
+      this.router.navigate(['/tickets'])
+    },err=>console.log(err),()=>console.log("done escalating"));
   }
 
   handleResolve(){
