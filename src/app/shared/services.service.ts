@@ -60,19 +60,19 @@ export class ServicesService {
   }
 
   deleteTicket(id:string){
-    return this.http.delete(this.url+'/internal/deleteticket/'+id,{...this.httpOptions, params:{id}})
+    return this.http.delete(this.url+'internal/deleteticket/'+id,{...this.httpOptions, params:{id}})
   }
 
   escalateTicket(data:any){
-    return this.http.post(this.url+'/internal/escalate',data,this.httpOptions)
+    return this.http.post(this.url+'internal/escalate',data,this.httpOptions)
   }
 
   reassignTicket(data:any){
-    return this.http.post(this.url+'/internal/reassign',data,this.httpOptions)
+    return this.http.post(this.url+'internal/reassign',data,this.httpOptions)
   }
 
   resolveTicket(data:any){
-    return this.http.post(this.url+'/internal/resolve',data,this.httpOptions)
+    return this.http.post(this.url+'internal/resolve',data,this.httpOptions)
   }
 
   getAllUsers():Observable<User[]>{
