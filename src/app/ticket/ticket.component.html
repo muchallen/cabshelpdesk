@@ -65,11 +65,11 @@
             </div>
             
               <div class="d-flex row justify-content-center mb-5">
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-info m-2" data-bs-toggle="modal" data-bs-target="#escalate-modal">Escalate</button></div>
-                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-success m-2"  (click)="handleResolve()">Resolve</button></div>
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-warning m-2" data-bs-toggle="modal" data-bs-target="#reply-modal">Reply</button></div>
-                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-primary m-2" data-bs-toggle="modal" data-bs-target="#reassign-modal">Reassign</button></div>
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-danger m-2" (click)="handleDelete()" >Delete</button></div>
+                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-info m-2" data-bs-toggle="modal" style="height: 4.5em;" data-bs-target="#escalate-modal">Escalate </button></div>
+                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-success m-2"  style="height: 4.5em;" (click)="handleResolve()">Update Status</button></div>
+                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-warning m-2" style="height: 4.5em;" data-bs-toggle="modal" data-bs-target="#reply-modal">Reply</button></div>
+                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-primary m-2" style="height: 4.5em;" data-bs-toggle="modal" data-bs-target="#reassign-modal">Reassign</button></div>
+                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-danger m-2" style="height: 4.5em;" (click)="handleDelete()" >Delete</button></div>
                
                 </div>
           </div>
@@ -121,10 +121,10 @@
               </div>
               <div class="modal-body">
               
-                <div class="form-group p-3">
+                <!-- <div class="form-group p-3">
                   <label for="">Email</label>
                   <input type="text" class="form-control" ngModel name="email" #email="ngModel" >
-                </div>
+                </div> -->
                 <div class="form-group p-3">
                   <label for="">Escalation Level</label>
                   <select class="select-item"  ngModel name="escalationLevel" #escalationLevel="ngModel" >
@@ -135,10 +135,10 @@
                   
                   </select>
                 </div>
-                <div class="form-group p-3">
+                <!-- <div class="form-group p-3">
                   <label for="">Comment</label>
                   <textarea class="form-control" ngModel name="comment" #comment="ngModel" ></textarea>
-                </div>
+                </div> -->
                 </div>
   
               <div class="d-flex justify-content-center">
@@ -174,13 +174,41 @@
                 </div>
   
               <div class="d-flex justify-content-center">
-                <button type="submit"  class="btn bg-gradient-success mx-4">Reassign</button>
+                <button type="submit"  class="btn bg-gradient-success mx-4"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Reassign</button>
               </div>
             </div>
           </div>
           </form>
         </div>
+        
+        <div class="modal fade" id="reassign-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <form role="form"  #fAssign="ngForm" (ngSubmit)="handleReassign(fAssign)" autocomplete="off" novalidate>
+          <div class="modal-dialog">
+           
+            <div class="modal-content">
+              
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Reassign</h5>
+                <i  class=" bi bi-x-lg" data-bs-dismiss="modal" aria-label="Close"></i>
+              </div>
+              <div class="modal-body">
+              
+                <div class="form-group p-3">
+                  <label for="">Assignee </label>
+                  <select class="select-item"  ngModel name="assignee" (change)="onChange($event.target)" #assignee="ngModel" >
+                    <option> Select Assignee</option>
+                    <option *ngFor="let user of AllUsers; let i = index">{{user.firstname}} {{user.lastname}}</option>
+                  </select>
+                </div>
+                </div>
   
+              <div class="d-flex justify-content-center">
+                <button type="submit"  class="btn bg-gradient-success mx-4"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Reassign</button>
+              </div>
+            </div>
+          </div>
+          </form>
+        </div>
     
     </main>
     
