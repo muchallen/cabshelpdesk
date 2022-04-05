@@ -29,6 +29,9 @@ export class TicketComponent implements OnInit {
     description:''
   } ;
   AllUsers:User[]=[]
+  selectedUser!: User;
+    
+  
   constructor(private services:ServicesService) { 
     
   }
@@ -51,8 +54,12 @@ export class TicketComponent implements OnInit {
   }
 
   handleReassign(val:NgForm){
-    console.log(val.value)
-    this.services.reassignTicket(val.value).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
+    const data={
+      username:this.selectedUser.email,
+      id:this.ticket.id
+    }
+
+    this.services.reassignTicket(data).subscribe(res=>console.log(res),err=>console.log(err),()=>console.log("done escalating"));
   }
 
   handleDelete(){
@@ -71,7 +78,8 @@ export class TicketComponent implements OnInit {
     console.log(data.value)
     let User =[]
 
-      User= this.AllUsers.filter(user=>user.firstname)
+      User= this.AllUsers.filter(user=>user.firstname+" "+user.lastname==data.value)
+      this.selectedUser = User[0]
   }
 
 }
