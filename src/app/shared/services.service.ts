@@ -75,6 +75,11 @@ export class ServicesService {
     return this.http.post(this.url+'internal/resolve',data,this.httpOptions)
   }
 
+  changeStatus(data:any){
+    return this.http.post(this.url+'internal/changestatus',data,this.httpOptions)
+  }
+
+
   getAllUsers():Observable<User[]>{
     return this.http.get<User[]>(this.url+'users/all', this.httpOptions)
   }

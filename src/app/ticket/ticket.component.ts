@@ -37,7 +37,7 @@ export class TicketComponent implements OnInit {
 
     this.services.escalateTicket(data).subscribe(
       (res) => {console.log(res)
-        alert("your ticket has been escalated to "+val.value)
+        alert("your ticket has been escalated to "+val.value.escalationLevel)
     
         this.loading=false
       },
@@ -78,12 +78,21 @@ export class TicketComponent implements OnInit {
     );
   }
 
-  handleResolve() {
-    this.services.reassignTicket('').subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err),
-      () => console.log('done escalating')
-    );
+  handleChangeStatus(form:NgForm) {
+    this.loading=true;
+    console.log(form.value)
+   const data={...form.value,id:this.ticket.id}
+    this.services.changeStatus(data).subscribe(
+      (res) => {console.log(res)
+        alert("your ticket status has been changed to : " +form.value.ticketStatus)
+          this.loading=false},
+          (err) => {
+            this.loading=false
+            alert("An error has occured please try again")
+            this.router.navigate(['/tickets'])
+            console.log(err)},
+          () => console.log('done updating status')
+        );
   }
 
   getAllUsers() {
@@ -103,4 +112,15 @@ export class TicketComponent implements OnInit {
     );
     this.selectedUser = User[0];
   }
+
+
+  // onChangeStatus(data: any){
+  //   console.log(data.value);
+  //   let status = [];
+
+  //   User = this.AllUsers.filter(
+  //     (user) => user.firstname + ' ' + user.lastname == data.value
+  //   );
+  //   this.selectedUser = User[0];
+  // }
 }
