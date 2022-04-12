@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { tick } from '@angular/core/testing';
 import { Ticket } from '../shared/models/Ticket';
+import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
 
 @Component({
@@ -18,6 +19,8 @@ export class DashboardComponent implements OnInit {
   normalEscalationNumber = 0;
   urgentEscalationNumber = 0;
   importantEscalationNumber = 0;
+  user!:User;
+  tableData:Ticket[]=[]
 
   openStatusNumber = 0;
   inprogressNumber = 0;
@@ -26,12 +29,14 @@ export class DashboardComponent implements OnInit {
   declinedStatusNumber = 0;
   awaitingStatusNumber = 0;
 
-  months: any[] = [];
+  monthsResolved!: [Ticket[]] 
+  monthsPending: any[] = [];
 
   constructor(private services: ServicesService) {}
 
   ngOnInit(): void {
     this.changeNavLink();
+    this.getUser();
     this.onGetAllTickets();
     // this.chartDatasets = this.chartDatasetsMonthly;
    
@@ -97,7 +102,7 @@ export class DashboardComponent implements OnInit {
   };
 
   onGetAllTickets() {
-    this.services.getAllTickets().subscribe(
+    this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
       (res) => {
         this.allTickets = res;
         this.resolved = this.allTickets.filter(
@@ -113,18 +118,35 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+updateTableData(option:number,value:String){
+  switch(option){
+    case 1:
+      this.tableData = this.allTickets?.filter(
+        (ticket) => ticket.escalationLevel.trim() == value.trim()
+      );
+      break;
+    case 2:
+    this.tableData = this.allTickets?.filter(
+          (ticket) => ticket.ticketStatus.trim() == value.trim()
+        );
+    break;
+  }
+
+}
+
+
   getEscalationsNumbers() {
     this.criticalEscalationNumber = this.allTickets?.filter(
-      (ticket) => ticket.escalationLevel == 'CRITICAL'
+      (ticket) => ticket.escalationLevel == 'CRITICAL' && ticket.ticketStatus!='RESOLVED'
     ).length;
     this.normalEscalationNumber = this.allTickets?.filter(
-      (ticket) => ticket.escalationLevel == 'NORMAL'
+      (ticket) => ticket.escalationLevel == 'NORMAL' && ticket.ticketStatus!='RESOLVED'
     ).length;
     this.urgentEscalationNumber = this.allTickets?.filter(
-      (ticket) => ticket.escalationLevel == 'URGENT'
+      (ticket) => ticket.escalationLevel == 'URGENT' && ticket.ticketStatus!='RESOLVED'
     ).length;
     this.importantEscalationNumber = this.allTickets?.filter(
-      (ticket) => ticket.escalationLevel == 'IMPORTANT'
+      (ticket) => ticket.escalationLevel == 'IMPORTANT' && ticket.ticketStatus!='RESOLVED'
     ).length;
   }
 
@@ -151,106 +173,129 @@ export class DashboardComponent implements OnInit {
 
   togglePeriod(data: any) {
     if (data.value == 'Monthly') {
-      this.getMonthlyResolvedStatistics()
+      this.getMonthlyResolvedStatistics();
     }
 
     if (data.value == 'Weekly') {
-      this.chartDatasets = this.chartDatasetsMonthly;
-      this.chartLabels = this.chartLabelsWeek;
+      this.getWeeklyResovedStatics();
     }
   }
 
-  getMonthlyResolvedStatistics() {
-    let jan: any = [],
-      feb: any = [],
-      mar: any = [],
-      apr: any = [],
-      may: any = [],
-      june: any = [],
-      july: any = [],
-      aug: any = [],
-      sep: any = [],
-      oct: any = [],
-      nov: any = [],
-      dec: any = [];
-    for (let i = 0; i < 12; i++) {
-      this.resolved?.forEach((ticket) => {
-        let date = new Date(ticket.dateCreated).getMonth();
-        if (date == i) {
-          switch (i) {
-            case 0:
-              jan.push(ticket);
-              break;
-            case 1:
-              feb.push(ticket);
-              break;
-            case 2:
-              mar.push(ticket);
-              break;
-            case 3:
-              apr.push(ticket);
-              break;
-            case 4:
-              may.push(ticket);
-              break;
-            case 5:
-              june.push(ticket);
-              break;
-            case 6:
-              july.push(ticket);
-              break;
-            case 7:
-              aug.push(ticket);
-              break;
-            case 8:
-              sep.push(ticket);
-              break;
-            case 9:
-              oct.push(ticket);
-              break;
-            case 10:
-              nov.push(ticket);
-              break;
-            case 11:
-              dec.push(ticket);
-              break;
-          }
-        }
-      });
-    }
+  getWeeklyResovedStatics(){
+    var curr = new Date; // get current date
+    var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    var last = first + 6; // last day is the first day + 6
 
-    this.months = [
-      jan,
-      feb,
-      mar,
-      apr,
-      may,
-      june,
-      july,
-      aug,
-      sep,
-      oct,
-      nov,
-      dec,
-    ];
+    var firstday = new Date(curr.setDate(first))
+    var lastday = new Date(curr.setDate(last))
 
-    console.log(this.months)
+
+    let sunday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==0 ),
+    monday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==1  && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday ),
+    tuesday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==2 && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday),
+    wednesday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==3  && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday),
+    thursday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==4  && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday),
+    friday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==5  && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday),
+    saturday:Ticket[]=this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getDay()==6  && new Date(ticket.dateCreated)>=firstday && new Date(ticket.dateCreated)<=lastday)
+
+        
     this.chartDatasets= [
       {
         data: [
-          this.months[0].length,
-          this.months[1].length,
-          this.months[2].length,
-          this.months[3].length,
-          this.months[4].length,
-          this.months[5].length,
+          sunday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          monday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          tuesday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          wednesday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          thursday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          friday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          saturday.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
         ],
         label: 'Resolved',
       },
-      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Pending' },
+      { data: [
+        sunday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        monday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        tuesday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        wednesday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        thursday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        friday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+        saturday.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+      ], label: 'Pending' },
+    ];
+
+    this.chartLabels = this.chartLabelsWeek;
+
+  }
+    
+
+
+  
+
+  
+
+  getMonthlyResolvedStatistics() {
+    let jan: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==0),
+      feb: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==1),
+      mar: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==2),
+      apr: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==3),
+      may: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==4),
+      june: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==5),
+      july: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==6),
+      aug: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==7),
+      sep: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==8),
+      oct: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==9),
+      nov: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==10),
+      dec: Ticket[] = this.allTickets.filter(ticket=>new Date(ticket.dateCreated).getMonth()==11);
+ 
+
+    
+
+    
+    this.chartDatasets= [
+      {
+        data: [
+          jan.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          feb.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          mar.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          apr.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          may.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          june.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          july.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          aug.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          sep.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          oct.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          nov.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          dec.filter(ticket=>ticket.ticketStatus=='RESOLVED').length
+        ],
+        label: 'Resolved',
+      },
+      { data: [
+          jan.filter(ticket=>ticket.ticketStatus=='RESOLVED').length,
+          feb.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          mar.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          apr.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          may.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          june.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          july.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          aug.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          sep.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          oct.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          nov.filter(ticket=>ticket.ticketStatus!='RESOLVED').length,
+          dec.filter(ticket=>ticket.ticketStatus!='RESOLVED').length
+      ], label: 'Pending' },
     ];
 
     this.chartLabels = this.chartLabelsMonthly;
 
   }
+
+  getUser(){
+    const data = localStorage.getItem('user')
+    this.user=JSON.parse(data||'{}')
+   }
+
+   onSignOut(){
+     this.services.signOut();
+     location.reload();
+   }
 }

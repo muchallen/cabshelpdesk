@@ -20,6 +20,7 @@ import { TableComponent } from './components/table/table.component';
 // import { TableunresolvedComponent } from './components/tableunresolved/tableunresolved.component';
 // import { TableescalationsComponent } from './components/tableescalations/tableescalations.component';
 import { TicketComponent } from './ticket/ticket.component';
+import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { TicketComponent } from './ticket/ticket.component';
     FormsModule,
     BrowserModule,
     AppRoutingModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    TimeagoModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

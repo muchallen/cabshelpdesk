@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
     console.log(data.value);
     this.services.signInUser(data.value).subscribe(
       (res) => {
+        document.cookie="auth"
         localStorage.setItem('user',JSON.stringify(res))
         this.router.navigate(['']);
       },

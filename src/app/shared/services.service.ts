@@ -84,4 +84,23 @@ export class ServicesService {
     return this.http.get<User[]>(this.url+'users/all', this.httpOptions)
   }
 
+  getAllTicketsAssigned(omUsername:string):Observable<Ticket[]>{
+    return this.http.get<Ticket[]>(this.url+'internal/getticketsbyassignee/'+omUsername, this.httpOptions)
+  }
+
+  signOut(){
+    localStorage.removeItem('user');
+  }
+
+  getAllStatus():Observable<String[]>{
+   return this.http.get<String[]>(this.url+'constants/ticket-statuses', this.httpOptions)
+  }
+
+  getAllEscalations():Observable<String[]>{
+    return this.http.get<String[]>(this.url+'constants/escalation-levels', this.httpOptions)
+   }
+
+   getAllTicketTypes():Observable<String[]>{
+    return this.http.get<String[]>(this.url+'constants/ticket-types', this.httpOptions)
+   }
 }

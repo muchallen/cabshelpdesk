@@ -31,49 +31,188 @@
       </nav>
       <!-- End Navbar -->
 
-        <div class="modal-content w-70 mx-auto">
-            <div class=" d-flex justify-content-end"><i [routerLink]="['/tickets']" class="bi bi-x-lg mx-4 mt-3"></i></div>
-            <div class="modal-body   p-3">
-              <div class="d-flex" style="align-items: end;">
-                <h5 for="recipient-name" class="col-form-label mx-1" style="line-height: unset;">Ticket Information</h5>
-                <hr style="flex: 1;">
-              </div>
-             <div class="">
-                <table class="m-4  ">
-                    <thead> 
-                      <th class="w-30"></th> 
-                      <th class="w-70"></th>
-                     </thead>
-                     <tbody>
-                       <tr><td><strong>Ticket Type:</strong></td> <td>{{ticket.ticketType}}</td> </tr> 
-                       <tr><td><strong>Escalation:</strong> </td> <td>{{ticket.escalationLevel}}</td></tr>
-                       <tr><td><strong>Email:</strong> </td> <td>{{ticket.email}}</td></tr>
-                       <tr><td><strong>Assignee: </strong> </td> <td>{{ticket.assignee}}</td></tr>
-                       <tr><td><strong> Full Name: </strong></td> <td>{{ticket.name}}</td> </tr> 
-                       <tr><td><strong>Phone:</strong> </td> <td>{{ticket.phone}}</td></tr>
-                       <tr><td><strong>Date Created:</strong> </td> <td>{{ticket.dateCreated}}</td></tr>
-                       <tr><td>Description:<strong></strong> </td> <td>{{ticket.description}}</td></tr>
-                       <tr><td>Comments:<strong></strong> </td> <td>{{ticket.description}}</td></tr>
-                     </tbody>
-                   </table>
-             </div>
-              <div class="d-flex" style="align-items: end;">
-                <h5 for="recipient-name" class="col-form-label mx-1" style="line-height: unset;">Action</h5>
-                <hr style="flex: 1;">
-              </div>
-              
-            </div>
+        <div class="modal-content w-70 mx-auto" style="background-color: whitesmoke;">
+				<div class="row  gx-5 mx-2 mt-5 ">
+					<!-- Contact detail -->
+          <div class=" d-flex justify-content-between"><h4 class="px-4">Ticket Details</h4><ul>
+          
+            <li class="nav-item dropdown pe-2 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i  class="bi bi-three-dots-vertical   px-4" style="font-size:x-large"></i>
+              </a>
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                <li class="mb-2" data-bs-toggle="modal"  data-bs-target="#escalate-modal" >
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
             
-              <div class="d-flex row justify-content-center mb-5">
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-info m-2" data-bs-toggle="modal" style="height: 4.5em;" data-bs-target="#escalate-modal">Escalate </button></div>
-                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-success m-2"  style="height: 4.5em;"  data-bs-toggle="modal" data-bs-target="#changeStatus-modal">Update Status</button></div>
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-warning m-2" style="height: 4.5em;" data-bs-toggle="modal" data-bs-target="#reply-modal">Reply</button></div>
-                <div class="col-md-2 col-sm-12"><button type="button" class="btn bg-gradient-primary m-2" style="height: 4.5em;" data-bs-toggle="modal" data-bs-target="#reassign-modal">Reassign</button></div>
-                <div class="col-md-2 col-sm-12"> <button type="button" class="btn bg-gradient-danger m-2" style="height: 4.5em;" (click)="handleDelete()" >Delete</button></div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1" >
+                        Escalate
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li class="mb-2" data-bs-toggle="modal" data-bs-target="#changeStatus-modal">
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
+            
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1" >
+                          Update Status
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
                
+                <li class="mb-2" data-bs-toggle="modal" data-bs-target="#reassign-modal">
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
+            
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1"  >
+                        Reassign
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li class="mb-2" data-bs-toggle="modal" data-bs-target="#reply-modal">
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
+            
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1"  >
+                        Reply
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+
+                <li class="mb-2" (click)="handleDelete()">
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
+            
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1" >
+                        Delete
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li class="mb-2"  [routerLink]="['/tickets']">
+                  <a class="dropdown-item border-radius-md" >
+                    <div class="d-flex py-1">
+            
+                      <div class="d-flex flex-column justify-content-center">
+                        <p class="text-sm font-weight-normal mb-1">
+                        Close
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li></ul></div>
+					<div class="col-xxl-12 mb-xxl-0">
+						<div class=" px-4 py-5 rounded">
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label">Phone Number</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Last name" value="{{ticket.phone}}">
+								</div>
+							
+							
+							
+								<div class="col-md-6">
+									<label class="form-label">Status</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.ticketStatus}}">
+								</div>
+                <div class="col-md-6">
+									<label class="form-label">Escalation</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.escalationLevel}}">
+								</div>
+              
+                
+                <div class="col-md-6">
+									<label class="form-label">Business Unit</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.businessUnit}}">
+								</div>
+								
+								<!-- First Name -->
+								<div class="col-md-12">
+									<label class="form-label">Name</label>
+									<input type="text" disabled class="form-control bg-secondary-soft" placeholder="" aria-label="First name" value="{{ticket.name}}">
+								</div>
+                <div class="col-md-12">
+									<label class="form-label">Email</label>
+									<input type="text" class="form-control bg-secondary-soft" placeholder="" dissabled aria-label="Phone number" value="{{ticket.email}}">
+								</div>
+
+                <div class="col-md-12">
+									<label class="form-label">Date Created</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ momentFomarter(ticket.dateCreated).format('LLL')}}">
+								</div>
+                <div class="col-md-12">
+									<label class="form-label">Assignee</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.assignee}}">
+								</div>
+
+                <div class="col-md-12">
+									<label class="form-label">Ticket #</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.id}}">
+								</div>
+							
+                
+                <div class="col-md-12">
+									<label class="form-label">Description</label>
+									<textarea type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.description}}"></textarea>
+								</div>
+
+                <div class="col-md-12">
+									<label class="form-label">Comments</label>
+                  <div class="bg-secondary-soft p-4" style="height:200px;overflow: auto;">
+                    <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
+                      <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
+                      <div class="media-body ">
+                          <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
+                          <small class=" d-block">
+                              lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                          </small>
+                          <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
+                      </div>
+                  </div>
+                  <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
+                    <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
+                    <div class="media-body ">
+                        <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
+                        <small class=" d-block">
+                            lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        </small>
+                        <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
+                    </div>
                 </div>
+                <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
+                  <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
+                  <div class="media-body ">
+                      <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
+                      <small class=" d-block">
+                          lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                      </small>
+                      <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
+                  </div>
+              </div>
+								</div>
+                </div>
+
+							</div> <!-- Row END -->
+						</div>
+					</div>	
+				</div>
           </div>
-        
         <footer class="footer pt-3  ">
           <div class="container-fluid">
             <div class="row align-items-center justify-content-lg-between">
@@ -87,22 +226,24 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Comment</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">New Message</h5>
                 <i  class=" bi bi-x-lg" data-bs-dismiss="modal" aria-label="Close"></i>
               </div>
               <div class="modal-body">
-               
-              <div class="form-group p-3">
-                <label for="">Client Name</label>
-                <input type="text" class="form-control" >
-              </div>
-              <div class="form-group p-3">
-                <label for="">Comment</label>
-                <textarea class="form-control" ></textarea>
-              </div>
-              </div>
 
-              
+                <div class="col-md-6">
+									<label class="form-label">Name</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.name}}">
+								</div>
+                <div class="col-md-6">
+									<label class="form-label">Phone</label>
+									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.phone}}">
+								</div>  
+                <div class="col-md-12">
+									<label class="form-label">Message</label>
+									<textarea type="text" class="form-control bg-secondary-soft"  placeholder="" aria-label="Phone number" value=""></textarea>
+								</div>
+              </div>              
               <div class="d-flex justify-content-center">
                 <button type="button" class="btn bg-gradient-success mx-4">Send</button>
               </div>
@@ -128,10 +269,7 @@
                 <div class="form-group p-3">
                   <label for="">Escalation Level</label>
                   <select class="select-item"  ngModel name="escalationLevel"  #escalationLevel="ngModel" >
-                    <option>NORMAL</option>
-                    <option>IMPORTANT</option>
-                    <option>URGENT</option>
-                    <option>CRITICAL</option>
+                    <option *ngFor="let es of escalations; let i = index">{{es}} </option>
                   </select>
                 </div>
                 <!-- <div class="form-group p-3">
@@ -166,7 +304,6 @@
                 <div class="form-group p-3">
                   <label for="">Assignee </label>
                   <select class="select-item"  ngModel name="assignee" (change)="onChange($event.target)" #assignee="ngModel" >
-                    <option> Select Assignee</option>
                     <option *ngFor="let user of AllUsers; let i = index">{{user.firstname}} {{user.lastname}}</option>
                   </select>
                 </div>
@@ -187,7 +324,7 @@
             <div class="modal-content">
               
               <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Reassign</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Change Status</h5>
                 <i  class=" bi bi-x-lg" data-bs-dismiss="modal" [routerLink]="['/tickets']" aria-label="Close"></i>
               </div>
               <div class="modal-body">
@@ -195,13 +332,7 @@
                 <div class="form-group p-3">
                   <label for="">Status </label>
                   <select class="select-item"  ngModel name="ticketStatus"  #ticketStatus="ngModel" >
-                    <option> Select Status</option>
-                    <option>OPEN</option>
-                    <option>IN PROGRESS</option>
-                    <option>ON HOLD</option>
-                    <option>RESOLVED</option>
-                    <option>DECLINED</option>
-                    <option>AWAITING INVESTIGATION</option>                   
+                    <option *ngFor="let es of status; let i = index">{{es}} </option>                
                   </select>
                 </div>
                 </div>

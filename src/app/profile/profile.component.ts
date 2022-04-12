@@ -1,6 +1,9 @@
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+
+import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
+import { ServicesService } from '../shared/services.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,21 +11,20 @@ import { User } from '../shared/models/User';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  resolved!: Ticket[];
 
-  constructor() { }
-  user:User={
-    email: "",
-    firstname: "",
-    lastname: "",
-    omUsername: "",
-    role: "",
-    available: false,
-    ticketCount: 0
-  }
+  constructor(private service:ServicesService) { }
+  user!:User
+  allTickets!:Ticket[] 
+  allTicketsNumber=0
+  resolvedNumber=0
+  pendingNumber=0
+
   
   ngOnInit(): void {
     this.changeNavLink();
     this.getUser()
+    this.onGetAllTickets()
   }
 
   changeNavLink = () => {
@@ -30,8 +32,27 @@ export class ProfileComponent implements OnInit {
     document.querySelector('#profile')?.classList.add('active');
   }
 
+  onGetAllTickets() {
+    this.service.getAllTicketsAssigned(this.user.omUsername).subscribe(
+      (res) => {
+        this.allTickets = res;
+        this.resolved = this.allTickets.filter(
+          (ticket) => ticket.ticketStatus == 'RESOLVED'
+        );
+        this.allTicketsNumber=this.allTickets.length;
+        this.resolvedNumber=this.resolved.length;
+        this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
+      },
+      (error) => console.log(console.log(error))
+    );
+  }
+
   getUser(){
    const data = localStorage.getItem('user')
    this.user=JSON.parse(data||'{}')
+  }
+  onSignOut(){
+    this.service.signOut();
+    location.reload();
   }
 }

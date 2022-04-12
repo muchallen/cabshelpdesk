@@ -4,6 +4,9 @@ import { Route, Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
+import moment  from 'moment' ;
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-ticket',
@@ -15,6 +18,9 @@ export class TicketComponent implements OnInit {
   AllUsers: User[] = [];
   selectedUser!: User;
   loading=false;
+  status:String[]=[]
+  escalations:String[]=[]
+  momentFomarter = moment
 
   constructor(private services: ServicesService, private router: Router) {}
 
@@ -22,6 +28,8 @@ export class TicketComponent implements OnInit {
     this.changeNavLink();
     this.ticket = this.services.selectedTicket;
     this.getAllUsers();
+    this.getAllEscalations();
+    this.getAllStatus();
   }
   changeNavLink = () => {
     document
@@ -36,15 +44,32 @@ export class TicketComponent implements OnInit {
     const data ={ ...val.value, id:this.ticket.id}
 
     this.services.escalateTicket(data).subscribe(
-      (res) => {console.log(res)
-        alert("your ticket has been escalated to "+val.value.escalationLevel)
-    
-        this.loading=false
+      (res) => {
+        Swal.fire(
+          'Success!',
+          "Your ticket has been escalated to "+val.value.escalationLevel,
+          'success'
+        ).then(result=>{
+          if(result.isConfirmed){
+            this.loading=false
+          }
+        })
+        
       },
       (err) => {console.log(err)
-      alert("An error has occured please try again")
-      this.loading=false
-      },
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+              if(result.isConfirmed){
+                this.loading=false
+              }
+         
+          })
+        }
+      ,
       () => console.log('done escalating')
     );
   }
@@ -58,22 +83,59 @@ export class TicketComponent implements OnInit {
 
     this.services.reassignTicket(data).subscribe(
       (res) => {console.log(res)
-      alert("your ticket has been assigned to "+this.selectedUser.firstname + " " + this.selectedUser.lastname)
-        this.loading=false
+        Swal.fire(
+          'Success!',
+          "Your ticket has been assigned to  "+this.selectedUser.firstname + " " + this.selectedUser.lastname,
+          'success'
+        ).then(result=>{
+          if(result.isConfirmed){
+            this.loading=false
+          }
+        })
     },
       (err) => {
-        this.loading=false
-        alert("An error has occured please try again")
-        this.router.navigate(['/tickets'])
-        console.log(err)},
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+              if(result.isConfirmed){
+                this.loading=false
+              }
+         
+          })},
       () => console.log('done assigning')
     );
   }
 
   handleDelete() {
     this.services.deleteTicket(this.ticket.id).subscribe(
-      (res) => console.log(res),
-      (err) => console.log(err),
+      (res) => {console.log(res)
+        Swal.fire(
+          'Success!',
+          "You have successfully deleted a ticket with ID "+ this.ticket.id,
+          'success'
+        ).then(result=>{
+          if(result.isConfirmed){
+            this.loading=false
+          }
+        })
+      
+      },
+      (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+              if(result.isConfirmed){
+                this.loading=false
+              }
+         
+          })
+      },
       () => console.log('done escalating')
     );
   }
@@ -81,15 +143,38 @@ export class TicketComponent implements OnInit {
   handleChangeStatus(form:NgForm) {
     this.loading=true;
     console.log(form.value)
+    
+   
    const data={...form.value,id:this.ticket.id}
+   if(form.value.ticketStatus=="RESOLVED")
+   {
+     alert("HELlo")
+    this.services.escalateTicket({escalationLevel:"NORMAL",id:this.ticket.id}).subscribe(res=>console.log(res), err=>console.log(err),()=>console.log("done escalating"))
+   }
     this.services.changeStatus(data).subscribe(
       (res) => {console.log(res)
-        alert("your ticket status has been changed to : " +form.value.ticketStatus)
-          this.loading=false},
-          (err) => {
+       
+        Swal.fire(
+          'Success!',
+          "Your ticket status has been changed to : " +form.value.ticketStatus,
+          'success'
+        ).then(result=>{
+          if(result.isConfirmed){
             this.loading=false
-            alert("An error has occured please try again")
-            this.router.navigate(['/tickets'])
+          }
+        })
+        },
+          (err) => {  Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'An error has occured please try again',
+            confirmButtonText: 'OK',
+          }).then((result) => {
+                if(result.isConfirmed){
+                  this.loading=false
+                }
+           
+            })
             console.log(err)},
           () => console.log('done updating status')
         );
@@ -113,6 +198,24 @@ export class TicketComponent implements OnInit {
     this.selectedUser = User[0];
   }
 
+  getAllStatus(){
+    this.services.getAllStatus().subscribe(res=>{
+      this.status=res
+    },err=>{
+      console.log(err)
+    },
+    )
+  }
+
+  getAllEscalations(){
+    this.services.getAllEscalations().subscribe(res=>{
+      this.escalations=res
+    },err=>{
+      console.log(err)
+    },
+    )
+  }
+
 
   // onChangeStatus(data: any){
   //   console.log(data.value);
@@ -123,4 +226,6 @@ export class TicketComponent implements OnInit {
   //   );
   //   this.selectedUser = User[0];
   // }
+
+  
 }

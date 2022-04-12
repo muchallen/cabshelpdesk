@@ -28,17 +28,13 @@
             <ul class="navbar-nav  justify-content-end">
            
 
-              <li class="nav-item px-3 d-flex align-items-center">
-                <a href="javascript:;" class="nav-link text-body p-0">
-                  <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer" style="font-size: x-large;"></i>
-                </a>
-              </li>
+              
               <li class="nav-item dropdown pe-2 d-flex align-items-center">
                 <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-user me-sm-1 cursor-pointer" style="font-size: x-large;"></i>
                 </a>
                 <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                  <li class="mb-2">
+                  <li class="mb-2" (click)="onSignOut()">
                     <a class="dropdown-item border-radius-md" href="javascript:;">
                       <div class="d-flex py-1">
               
@@ -46,8 +42,8 @@
                           <p class="text-sm font-weight-normal mb-1">
                           Sign Out 
                           </p>
-                          <p class="text-xs text-secondary mb-0">
-                            user@gmail.com
+                          <p class="text-xs  mb-0">
+                            {{user.email}}
                           </p>
                         </div>
                       </div>
