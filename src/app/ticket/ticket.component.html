@@ -173,38 +173,37 @@
 								</div>
 
                 <div class="col-md-12">
-									<label class="form-label">Comments</label>
-                  <div class="bg-secondary-soft p-4" style="height:200px;overflow: auto;">
-                    <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
-                      <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
+									<label class="form-label card d-inline p-2 mb-4" *ngIf="showComments" (click)="toggleShowComments(true)">Comments</label>
+                  <label *ngIf="showComments" (click)="toggleShowComments(false)" class="form-label ">Messages</label>
+                   	<label *ngIf="!showComments" (click)="toggleShowComments(true)" class="form-label ">Comments</label> 
+                     <label *ngIf="!showComments" (click)="toggleShowComments(false)" class="form-label card d-inline p-2 mb-4">Messages</label> 
+                  <div class="bg-secondary-soft p-4 mt-2" style="height:200px;overflow: auto;">
+                      <div *ngIf="showComments" >
+                    <div *ngFor="let comm of comments; let i = index"class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
+                      <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >{{comm.creator.substring(0,1)}}</div>
                       <div class="media-body ">
-                          <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
+                          <p><a  class="text-body fw-bold">{{comm.creator}}</a></p>
                           <small class=" d-block">
-                              lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                              {{comm.comment}}
                           </small>
-                          <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
+                          <div class="text-muted d-flex justify-content-end"><small timeago [date]="comm.dateCreated"  class=" font-weight-bold ml-0"></small></div> 
                       </div>
                   </div>
-                  <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
-                    <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
+                </div>
+                  <div  *ngIf="!showComments" >
+                  <div *ngFor="let message of messages; let i = index"class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
+                    <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:bisque; width: 50px; height: 50px"  >{{message.creator.substring(0,1)}}</div>
                     <div class="media-body ">
-                        <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
+                        <p><a  class="text-body fw-bold">{{message.creator}}</a></p>
                         <small class=" d-block">
-                            lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                            {{message.message}}
                         </small>
-                        <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
+                        <div class="text-muted d-flex justify-content-end"><small timeago [date]="message.dateCreated"  class=" font-weight-bold ml-0"></small></div> 
                     </div>
                 </div>
-                <div class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
-                  <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >A</div>
-                  <div class="media-body ">
-                      <p><a  class="text-body fw-bold">Alice Machingura</a><br><p style="font-size:10px">alice.machingura@gmail.com</p></p>
-                      <small class=" d-block">
-                          lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                      </small>
-                      <div class="text-muted d-flex justify-content-end"><small class=" font-weight-bold ml-0">13 minutes ago</small></div>
-                  </div>
               </div>
+                  
+             
 								</div>
                 </div>
 
@@ -225,6 +224,7 @@
         <div class="modal fade" id="reply-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
+              <form role="form"  #messageForm="ngForm" (ngSubmit)="sendMessagetoClient(messageForm)" autocomplete="off" novalidate>
               <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">New Message</h5>
                 <i  class=" bi bi-x-lg" data-bs-dismiss="modal" aria-label="Close"></i>
@@ -232,26 +232,27 @@
               <div class="modal-body">
 
                 <div class="col-md-6">
-									<label class="form-label">Name</label>
-									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.name}}">
+									<label class="form-label">ID</label>
+									<input type="text" class="form-control bg-secondary-soft"   disabled  aria-label="Phone number" value="{{ticket.id}}">
 								</div>
                 <div class="col-md-6">
 									<label class="form-label">Phone</label>
-									<input type="text" class="form-control bg-secondary-soft" disabled placeholder="" aria-label="Phone number" value="{{ticket.phone}}">
+									<input type="text" class="form-control bg-secondary-soft"  disabled  aria-label="Phone number" value="{{ticket.phone}}">
 								</div>  
                 <div class="col-md-12">
 									<label class="form-label">Message</label>
-									<textarea type="text" class="form-control bg-secondary-soft"  placeholder="" aria-label="Phone number" value=""></textarea>
+									<textarea type="text" class="form-control bg-secondary-soft" ngModel name="message" #message="ngModel"   placeholder="" aria-label="Phone number" value=""></textarea>
 								</div>
               </div>              
               <div class="d-flex justify-content-center">
-                <button type="button" class="btn bg-gradient-success mx-4">Send</button>
+                <button type="submit" class="btn bg-gradient-success mx-4"><span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Send</button>
               </div>
+            </form>
             </div>
           </div>
         </div>
         <div class="modal fade" id="escalate-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-          <form role="form"  #f="ngForm" (ngSubmit)="handleEscalate(f)" autocomplete="off" novalidate>
+          <form role="form"  #escalationForm="ngForm" (ngSubmit)="handleEscalate(escalationForm)" autocomplete="off" novalidate>
           <div class="modal-dialog">
            
             <div class="modal-content">
@@ -269,17 +270,25 @@
                 <div class="form-group p-3">
                   <label for="">Escalation Level</label>
                   <select class="select-item"  ngModel name="escalationLevel"  #escalationLevel="ngModel" >
+                    <option>select</option>
                     <option *ngFor="let es of escalations; let i = index">{{es}} </option>
                   </select>
+
+                  
                 </div>
                 <!-- <div class="form-group p-3">
                   <label for="">Comment</label>
                   <textarea class="form-control" ngModel name="comment" #comment="ngModel" ></textarea>
                 </div> -->
+                <div class="col-md-12">
+									<label class="form-label">Comment</label>
+									<textarea type="text" class="form-control bg-secondary-soft" ngModel name="comment" #comment="ngModel"  placeholder="" aria-label="Phone number" value=""></textarea>
+								</div>
+
                 </div>
   
               <div class="d-flex justify-content-center">
-                <button type="submit" class="btn bg-gradient-success mx-4">Escalate</button>
+                <button type="submit" class="btn bg-gradient-success mx-4"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>  Escalate</button>
               </div>
              
             </div>
@@ -290,7 +299,7 @@
         </div>
 
         <div class="modal fade" id="reassign-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-          <form role="form"  #fAssign="ngForm" (ngSubmit)="handleReassign(fAssign)" autocomplete="off" novalidate>
+          <form role="form"  #reassignForm="ngForm" (ngSubmit)="handleReassign(reassignForm)" autocomplete="off" novalidate>
           <div class="modal-dialog">
            
             <div class="modal-content">
@@ -302,23 +311,39 @@
               <div class="modal-body">
               
                 <div class="form-group p-3">
-                  <label for="">Assignee </label>
-                  <select class="select-item"  ngModel name="assignee" (change)="onChange($event.target)" #assignee="ngModel" >
+                 
+                  <div >
+                    <label for="">Assignee </label>
+                    <input type="text" id="selected-uname" class="form-control bg-secondary-soft"  (keypress)="handleSearch($event.target)" value="">
+                    <ul class=" d-block u-names p-0"  >
+                      <li class="d-block m-2" *ngFor="let name of searchArrayUsers" (click)="selectAssignee($event.target)">{{name.firstname}} {{name.lastname}}</li>
+                      <div class="col-md-12 p-0">
+                        <label class="form-label mt-4">Comment</label>
+                        <textarea type="text" class="form-control bg-secondary-soft" ngModel name="comment" #comment="ngModel"  placeholder="" aria-label="Phone number" value=""></textarea>
+                      </div>
+       
+                      <div class="d-flex justify-content-center mt-4" >
+                        <button type="submit"  class=" btn bg-gradient-success " > <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Reassign</button>
+                      </div>
+                    </ul>
+
+                  
+                  </div>
+                  <!-- <select class="select-item"  ngModel name="assignee" (change)="onChange($event.target)" #assignee="ngModel" >
+                    <option>select</option>
                     <option *ngFor="let user of AllUsers; let i = index">{{user.firstname}} {{user.lastname}}</option>
-                  </select>
+                  </select> -->
                 </div>
                 </div>
   
-              <div class="d-flex justify-content-center">
-                <button type="submit"  class="btn bg-gradient-success mx-4"> <span *ngIf="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Reassign</button>
-              </div>
+              
             </div>
           </div>
           </form>
         </div>
         
         <div class="modal fade" id="changeStatus-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-          <form role="form"  #fstatus="ngForm" (ngSubmit)="handleChangeStatus(fstatus)" autocomplete="off" novalidate>
+          <form role="form"  #statusForm="ngForm" (ngSubmit)="handleChangeStatus(statusForm)" autocomplete="off" novalidate>
           <div class="modal-dialog">
            
             <div class="modal-content">
@@ -332,6 +357,7 @@
                 <div class="form-group p-3">
                   <label for="">Status </label>
                   <select class="select-item"  ngModel name="ticketStatus"  #ticketStatus="ngModel" >
+                    <option>select</option>
                     <option *ngFor="let es of status; let i = index">{{es}} </option>                
                   </select>
                 </div>

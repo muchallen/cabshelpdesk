@@ -18,7 +18,7 @@
       <tr>
         <!-- <th *ngFor="let head of headElements; let i = index" scope="col">{{ head }}
         </th> -->
-        <th class="w-10">Ticket Type</th>
+        <th class="w-10">Type</th>
         <th class="w-70">Description</th>
         <th class="w-10">Status</th>
         <th class="w-10">Created</th>
@@ -32,7 +32,7 @@
             <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{ el.description.substr(0, 40) }} ..</td>
         <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex"><span *ngIf="el.escalationLevel=='NORMAL'" class="badge bg-gradient-success">{{ el.ticketStatus }}</span>
           <span *ngIf="el.escalationLevel=='IMPORTANT'" class="badge bg-gradient-warning">{{ el.ticketStatus }}</span>
-          <span *ngIf="el.escalationLevel=='URGENT'" class="badge bg-gradient-primary">{{ el.ticketStatus }}</span>
+          <span *ngIf="el.escalationLevel=='URGENT'" class="badge bg-info">{{ el.ticketStatus }}</span>
           <span *ngIf="el.escalationLevel=='CRITICAL' " class="badge bg-gradient-danger">{{ el.ticketStatus }}</span>
           
         

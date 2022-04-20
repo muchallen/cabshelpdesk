@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, AfterViewInit, ChangeDetectorRef, Input, OnChanges, Output,  
+  EventEmitter } from '@angular/core';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
 import { Ticket } from 'src/app/shared/models/Ticket';
 import { ServicesService } from 'src/app/shared/services.service';
@@ -15,6 +16,7 @@ import {strings as englishStrings} from 'ngx-timeago/language-strings/en';
 export class TableComponent  implements OnInit, AfterViewInit , OnChanges{
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination:any
   @ViewChild(MdbTableDirective, { static: true }) mdbTable:any
+  @Output()  dataEmitter  = new EventEmitter<Ticket[]>();
   elements: any = [];
   previous: any = [];
   headElements = ['Ticket Type', 'Client Name','Status','Description'];
@@ -41,14 +43,15 @@ export class TableComponent  implements OnInit, AfterViewInit , OnChanges{
   }
 
   ngOnChanges(){
+   
     this.mdbTable.setDataSource(this.data);
     this.data = this.mdbTable.getDataSource();
     this.previous = this.mdbTable.getDataSource();
+    
   }
 
   ngAfterViewInit() {
     this.mdbTablePagination.setMaxVisibleItemsNumberTo(5);
-
     this.mdbTablePagination.calculateFirstItemIndex();
     this.mdbTablePagination.calculateLastItemIndex();
     this.cdRef.detectChanges();

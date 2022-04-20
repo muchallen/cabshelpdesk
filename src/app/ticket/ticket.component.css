@@ -110,3 +110,15 @@ body{margin-top:20px;
   .comment-item{
     background-color: #F7F9F9
   }
+
+  li{
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .u-names>li:hover{
+    background-color: #cecece;
+    color: white;
+
+  }

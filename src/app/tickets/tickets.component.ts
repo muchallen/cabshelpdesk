@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
@@ -18,9 +18,14 @@ export class TicketsComponent implements OnInit {
   resolved:Ticket[]=[];
   unresolved:Ticket[]=[];
   user!:User
+  assignedTickets:boolean=true
+
+  number=true;
 
 
   constructor(private services:ServicesService) { }
+  
+ 
 
   ngOnInit(): void {
     
@@ -28,6 +33,9 @@ export class TicketsComponent implements OnInit {
     this.getUser();
     this.onGetAllTickets();
   }
+
+
+  
 
   onGetAllTickets() {
     
@@ -55,6 +63,36 @@ export class TicketsComponent implements OnInit {
    onSignOut(){
     this.services.signOut();
     location.reload();
+  }
+
+  toggleTickets(value:boolean){
+
+    this.assignedTickets=value
+    switch(this.assignedTickets){
+      case true :
+           this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
+           (res) => {
+            this.escalations= res.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
+            this.resolved= res.filter(ticket=>ticket.ticketStatus =="RESOLVED")
+            this.unresolved=res.filter(ticket=>ticket.ticketStatus !="RESOLVED")
+           this.loading=false
+         },error=>console.log(console.log(error)));
+         break;
+         case false :
+          
+          this.services.getAllTickets().subscribe(
+          (res) => {
+           this.escalations= res.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
+           this.resolved= res.filter(ticket=>ticket.ticketStatus =="RESOLVED")
+           this.unresolved=res.filter(ticket=>ticket.ticketStatus !="RESOLVED")
+           console.log(res)
+          this.loading=false
+        },error=>console.log(console.log(error)));
+        break;
+           
+       
+      
+    }
   }
 
 }

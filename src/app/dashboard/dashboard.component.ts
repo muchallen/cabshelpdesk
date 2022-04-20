@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   importantEscalationNumber = 0;
   user!:User;
   tableData:Ticket[]=[]
+  assignedTickets:boolean=true
 
   openStatusNumber = 0;
   inprogressNumber = 0;
@@ -40,6 +41,22 @@ export class DashboardComponent implements OnInit {
     this.onGetAllTickets();
     // this.chartDatasets = this.chartDatasetsMonthly;
    
+  }
+  onGetAllTickets() {
+    this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
+      (res) => {
+        this.allTickets = res;
+        this.resolved = this.allTickets.filter(
+          (ticket) => ticket.ticketStatus != 'RESOLVED'
+        );
+        console.log(res);
+        this.getEscalationsNumbers();
+        this.getStatusNumbers();
+        this.getMonthlyResolvedStatistics();
+        this.loading = false;
+      },
+      (error) => console.log(console.log(error))
+    );
   }
   chartType = 'line';
   chartDatasets: any;
@@ -101,22 +118,7 @@ export class DashboardComponent implements OnInit {
     document.querySelector('#dashboard')?.classList.add('active');
   };
 
-  onGetAllTickets() {
-    this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
-      (res) => {
-        this.allTickets = res;
-        this.resolved = this.allTickets.filter(
-          (ticket) => ticket.ticketStatus != 'RESOLVED'
-        );
-        console.log(res);
-        this.getEscalationsNumbers();
-        this.getStatusNumbers();
-        this.getMonthlyResolvedStatistics();
-        this.loading = false;
-      },
-      (error) => console.log(console.log(error))
-    );
-  }
+ 
 
 updateTableData(option:number,value:String){
   switch(option){
@@ -297,5 +299,47 @@ updateTableData(option:number,value:String){
    onSignOut(){
      this.services.signOut();
      location.reload();
+   }
+
+   toggleTickets(value:boolean){
+     this.assignedTickets=value
+     switch(this.assignedTickets){
+       case true :
+            this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
+            (res) => {
+              this.allTickets = res;
+              this.resolved = this.allTickets.filter(
+                (ticket) => ticket.ticketStatus != 'RESOLVED'
+              );
+              console.log(res);
+              this.getEscalationsNumbers();
+              this.getStatusNumbers();
+              this.getMonthlyResolvedStatistics();
+              this.loading = false;
+            },
+            (error) => console.log(console.log(error))
+          );
+          break;
+        
+        case false: 
+        this.services.getAllTickets().subscribe(
+          (res) => {
+            this.allTickets = res;
+            this.resolved = this.allTickets.filter(
+              (ticket) => ticket.ticketStatus != 'RESOLVED'
+            );
+            console.log(res);
+            this.getEscalationsNumbers();
+            this.getStatusNumbers();
+            this.getMonthlyResolvedStatistics();
+            this.loading = false;
+          },
+          (error) => console.log(console.log(error))
+        );
+        break;
+            
+        
+       
+     }
    }
 }

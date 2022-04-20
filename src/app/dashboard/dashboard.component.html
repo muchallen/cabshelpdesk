@@ -21,20 +21,51 @@
          
           <h6 class="font-weight-bolder mb-0">Escalations</h6>
         </nav>
+        
+
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
             </div>
           </div>
+          
+          
           <ul class="navbar-nav  justify-content-end">
            
-
+           
             
             <li class="nav-item dropdown pe-2 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user me-sm-1 cursor-pointer" style="font-size: x-large;"></i>
+                <i class="bi bi-list me-sm-1 cursor-pointer" style="font-size: x-large;"></i>
               </a>
               <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                <li class="mb-2" (click)="toggleTickets(false)">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class=" py-1">
+            
+                      <div class="d-flex  justify-content-between">
+                        <p class="text-sm d-inline font-weight-normal mb-1  ">
+                        All Tickets 
+                        </p>
+                        <span *ngIf="!assignedTickets" class="flex"><input type="radio" checked class=" bg-success"></span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+
+                <li class="mb-2" (click)="toggleTickets(true)">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class=" py-1">
+            
+                      <div class="d-flex  justify-content-between">
+                        <p class="text-sm d-inline font-weight-normal mb-1  ">
+                        Assigned Tickets 
+                        </p>
+                        <span *ngIf="assignedTickets" class="flex"><input type="radio" checked class=" bg-success"></span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
                 <li class="mb-2" (click)="onSignOut()">
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
@@ -198,7 +229,7 @@
                         </div>
                       </div>
                       <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
+                        <div class="icon icon-shape bg-gradient-secondary shadow text-center border-radius-md">
                           <i class="ni ni-sound-wave text-lg opacity-10" aria-hidden="true"></i>
                         </div>
                       </div>
@@ -289,7 +320,7 @@
                         </div>
                       </div>
                       <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                        <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
                           <i class="ni ni-sound-wave text-lg opacity-10" aria-hidden="true"></i>
                         </div>
                       </div>
@@ -311,7 +342,7 @@
                         </div>
                       </div>
                       <div class="col-4 text-end">
-                        <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                        <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
                           <i class="ni ni-sound-wave text-lg opacity-10" aria-hidden="true"></i>
                         </div>
                       </div>

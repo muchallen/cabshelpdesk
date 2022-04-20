@@ -4,9 +4,10 @@ import { Route, Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
-import moment  from 'moment' ;
+import moment from 'moment';
 import Swal from 'sweetalert2';
-
+import { ComentModel } from '../shared/models/Comment';
+import { MessageModel } from '../shared/models/Message';
 
 @Component({
   selector: 'app-ticket',
@@ -17,10 +18,15 @@ export class TicketComponent implements OnInit {
   ticket!: Ticket;
   AllUsers: User[] = [];
   selectedUser!: User;
-  loading=false;
-  status:String[]=[]
-  escalations:String[]=[]
-  momentFomarter = moment
+  loading = false;
+  status: String[] = [];
+  escalations: String[] = [];
+  momentFomarter = moment;
+  user!: User;
+  comments: ComentModel[] = [];
+  messages: MessageModel[] = [];
+  showComments = true;
+  searchArrayUsers: User[] = [];
 
   constructor(private services: ServicesService, private router: Router) {}
 
@@ -30,6 +36,9 @@ export class TicketComponent implements OnInit {
     this.getAllUsers();
     this.getAllEscalations();
     this.getAllStatus();
+    this.getCommentsByTicketId();
+    this.getUser();
+    this.getAllMessages();
   }
   changeNavLink = () => {
     document
@@ -38,61 +47,56 @@ export class TicketComponent implements OnInit {
     document.querySelector('#tickets')?.classList.add('active');
   };
 
-  handleEscalate(val: NgForm) {
-    this.loading=true
-    console.log(val.value)
-    const data ={ ...val.value, id:this.ticket.id}
-
-    this.services.escalateTicket(data).subscribe(
-      (res) => {
-        Swal.fire(
-          'Success!',
-          "Your ticket has been escalated to "+val.value.escalationLevel,
-          'success'
-        ).then(result=>{
-          if(result.isConfirmed){
-            this.loading=false
-          }
-        })
-        
-      },
-      (err) => {console.log(err)
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'An error has occured please try again',
-          confirmButtonText: 'OK',
-        }).then((result) => {
-              if(result.isConfirmed){
-                this.loading=false
-              }
-         
-          })
-        }
-      ,
-      () => console.log('done escalating')
-    );
+  selectAssignee(event: any) {
+    let input = document.querySelector('#selected-uname') as HTMLInputElement;
+    input.value = event.innerHTML;
+    this.onChange(input.value);
+    this.searchArrayUsers = [];
   }
 
-  handleReassign(val: NgForm) {
-    this.loading=true
+  handleEscalate(val: NgForm) {
+    this.loading = true;
+    if (
+      val.value.escalationLevel == '' ||
+      val.value.escalationLevel == 'select'
+    ) {
+      this.loading = false;
+      return;
+    }
     const data = {
-      assignee: this.selectedUser.omUsername,
+      escalationLevel: val.value.escalationLevel,
       id: this.ticket.id,
+      manager: this.user.manager,
+    };
+    let comment = val.value.comment;
+    let commentPayload = {
+      comment: comment,
+      creator: this.user.firstname + ' ' + this.user.lastname,
+      ticketID: this.ticket.id,
     };
 
-    this.services.reassignTicket(data).subscribe(
-      (res) => {console.log(res)
+    console.log(data, commentPayload);
+
+    if (comment != '') {
+      this.services.createComment(commentPayload).subscribe(
+        (res) => console.log(res),
+        (err) => console.log(err),
+        () => console.log('done creating comment')
+      );
+    }
+    this.services.escalateTicket(data).subscribe(
+      (res) => {
+        console.log(res);
         Swal.fire(
           'Success!',
-          "Your ticket has been assigned to  "+this.selectedUser.firstname + " " + this.selectedUser.lastname,
+          'Your ticket has been escaleted to  ' + data.escalationLevel,
           'success'
-        ).then(result=>{
-          if(result.isConfirmed){
-            this.loading=false
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
           }
-        })
-    },
+        });
+      },
       (err) => {
         Swal.fire({
           icon: 'error',
@@ -100,28 +104,88 @@ export class TicketComponent implements OnInit {
           text: 'An error has occured please try again',
           confirmButtonText: 'OK',
         }).then((result) => {
-              if(result.isConfirmed){
-                this.loading=false
-              }
-         
-          })},
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
+      () => console.log('done escalating')
+    );
+  }
+
+  handleReassign(val: NgForm) {
+    this.loading = true;
+    if (this.selectedUser == null) {
+      this.loading = false;
+      return;
+    }
+    const data = {
+      assignee: this.selectedUser.omUsername,
+      id: this.ticket.id,
+    };
+
+    let comment = val.value.comment;
+    let commentPayload = {
+      comment: comment,
+      creator: this.user.firstname + ' ' + this.user.lastname,
+      ticketID: this.ticket.id,
+    };
+
+    console.log(data, commentPayload);
+
+    if (comment != '') {
+      this.services.createComment(commentPayload).subscribe(
+        (res) => console.log(res),
+        (err) => console.log(err),
+        () => console.log('done creating comment')
+      );
+    }
+
+    this.services.reassignTicket(data).subscribe(
+      (res) => {
+        console.log(res);
+        Swal.fire(
+          'Success!',
+          'Your ticket has been assigned to  ' +
+            this.selectedUser.firstname +
+            ' ' +
+            this.selectedUser.lastname,
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
+      (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
       () => console.log('done assigning')
     );
   }
 
   handleDelete() {
     this.services.deleteTicket(this.ticket.id).subscribe(
-      (res) => {console.log(res)
+      (res) => {
+        console.log(res);
         Swal.fire(
           'Success!',
-          "You have successfully deleted a ticket with ID "+ this.ticket.id,
+          'You have successfully deleted a ticket with ID ' + this.ticket.id,
           'success'
-        ).then(result=>{
-          if(result.isConfirmed){
-            this.loading=false
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
           }
-        })
-      
+        });
       },
       (err) => {
         Swal.fire({
@@ -130,54 +194,100 @@ export class TicketComponent implements OnInit {
           text: 'An error has occured please try again',
           confirmButtonText: 'OK',
         }).then((result) => {
-              if(result.isConfirmed){
-                this.loading=false
-              }
-         
-          })
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
       },
       () => console.log('done escalating')
     );
   }
 
-  handleChangeStatus(form:NgForm) {
-    this.loading=true;
-    console.log(form.value)
-    
-   
-   const data={...form.value,id:this.ticket.id}
-   if(form.value.ticketStatus=="RESOLVED")
-   {
-     alert("HELlo")
-    this.services.escalateTicket({escalationLevel:"NORMAL",id:this.ticket.id}).subscribe(res=>console.log(res), err=>console.log(err),()=>console.log("done escalating"))
-   }
-    this.services.changeStatus(data).subscribe(
-      (res) => {console.log(res)
-       
-        Swal.fire(
-          'Success!',
-          "Your ticket status has been changed to : " +form.value.ticketStatus,
-          'success'
-        ).then(result=>{
-          if(result.isConfirmed){
-            this.loading=false
-          }
+  handleChangeStatus(form: NgForm) {
+    this.loading = true;
+    console.log(form.value.ticketStatus);
+    if (form.value.ticketStatus == '' || form.value.ticketStatus == 'select') {
+      this.loading = false;
+      return;
+    }
+
+    const data = { ...form.value, id: this.ticket.id };
+    if (form.value.ticketStatus == 'RESOLVED') {
+      this.services
+        .escalateTicket({
+          escalationLevel: 'NORMAL',
+          id: this.ticket.id,
+          manager: this.user.manager,
         })
+        .subscribe(
+          (res) => {
+            this.services.changeStatus(data).subscribe(
+              (res) => {
+                console.log(res);
+
+                Swal.fire(
+                  'Success!',
+                  'Your ticket status has been changed to : ' +
+                    form.value.ticketStatus,
+                  'success'
+                ).then((result) => {
+                  if (result.isConfirmed) {
+                    this.loading = false;
+                  }
+                });
+              },
+              (err) => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'An error has occured please try again',
+                  confirmButtonText: 'OK',
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    this.loading = false;
+                  }
+                });
+                console.log(err);
+              },
+              () => console.log('done updating status')
+            );
+            console.log();
+          },
+          (err) => console.log(err),
+          () => console.log('done escalating')
+        );
+    } else {
+      this.services.changeStatus(data).subscribe(
+        (res) => {
+          console.log(res);
+
+          Swal.fire(
+            'Success!',
+            'Your ticket status has been changed to : ' +
+              form.value.ticketStatus,
+            'success'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              this.loading = false;
+            }
+          });
         },
-          (err) => {  Swal.fire({
+        (err) => {
+          Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'An error has occured please try again',
             confirmButtonText: 'OK',
           }).then((result) => {
-                if(result.isConfirmed){
-                  this.loading=false
-                }
-           
-            })
-            console.log(err)},
-          () => console.log('done updating status')
-        );
+            if (result.isConfirmed) {
+              this.loading = false;
+            }
+          });
+          console.log(err);
+        },
+        () => console.log('done updating status')
+      );
+    }
   }
 
   getAllUsers() {
@@ -189,43 +299,122 @@ export class TicketComponent implements OnInit {
   }
 
   onChange(data: any) {
-    console.log(data.value);
+    if (data == '') {
+      return;
+    }
     let User = [];
 
     User = this.AllUsers.filter(
-      (user) => user.firstname + ' ' + user.lastname == data.value
+      (user) =>
+        user.firstname.toLocaleLowerCase().trim() +
+          ' ' +
+          user.lastname.toLocaleLowerCase().trim() ==
+        data.toLocaleLowerCase().trim()
     );
     this.selectedUser = User[0];
   }
 
-  getAllStatus(){
-    this.services.getAllStatus().subscribe(res=>{
-      this.status=res
-    },err=>{
-      console.log(err)
-    },
-    )
+  getAllStatus() {
+    this.services.getAllStatus().subscribe(
+      (res) => {
+        this.status = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
-  getAllEscalations(){
-    this.services.getAllEscalations().subscribe(res=>{
-      this.escalations=res
-    },err=>{
-      console.log(err)
-    },
-    )
+  getAllEscalations() {
+    this.services.getAllEscalations().subscribe(
+      (res) => {
+        this.escalations = res;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
+  getUser() {
+    const data = localStorage.getItem('user');
+    this.user = JSON.parse(data || '{}');
+  }
 
-  // onChangeStatus(data: any){
-  //   console.log(data.value);
-  //   let status = [];
+getCommentsByTicketId() {
+    this.services.getAllCommentsByTicketId(this.ticket.id).subscribe(
+      (res) => {
+        this.comments = res;
 
-  //   User = this.AllUsers.filter(
-  //     (user) => user.firstname + ' ' + user.lastname == data.value
-  //   );
-  //   this.selectedUser = User[0];
-  // }
+        console.log(this.comments);
+      },
+      (err) => console.log(err),
+      () => console.log('done getting commnents')
+    );
+  }
 
-  
+  sendMessagetoClient(form: NgForm) {
+    this.loading=true;
+    let data: MessageModel = {
+      creator: this.user.firstname + ' ' + this.user.lastname,
+      dateCreated: new Date(),
+      message: form.value.message,
+      phone: this.ticket.phone,
+      ticketID: this.ticket.id,
+    };
+
+    this.services.sendMessageToClient(data).subscribe(
+      (res) => {
+        console.log(res);
+        Swal.fire(
+          'Success!',
+          'Your message has been sent successfully ',
+          'success'
+        ).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
+      (err) => {
+        console.log(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
+      () => console.log('done sending message')
+    );
+  }
+
+  toggleShowComments(val: boolean) {
+    this.showComments = val;
+  }
+
+  getAllMessages() {
+    this.services.getMessagesByTicketId(this.ticket.id).subscribe(
+      (res) => {
+        this.messages = res;
+      },
+      (err) => console.log(err),
+      () => console.log('done getting messages')
+    );
+  }
+
+  handleSearch(event: any) {
+    this.searchArrayUsers = this.AllUsers.filter(
+      (user) =>
+        user.firstname.toLocaleLowerCase().substring(0, event.value.length) ==
+          event.value.toLocaleLowerCase() ||
+        user.lastname.toLowerCase().substring(0, event.value.length) ==
+          event.value.toLocaleLowerCase()
+    );
+    console.log(this.searchArrayUsers);
+  }
 }

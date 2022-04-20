@@ -5,6 +5,6 @@ lastname: string,
 omUsername: string,
 role: string,
 available: boolean,
-ticketCount: number
-
+ticketCount: number,
+manager:string
 }

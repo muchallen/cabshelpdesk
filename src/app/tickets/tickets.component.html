@@ -31,9 +31,36 @@
               
               <li class="nav-item dropdown pe-2 d-flex align-items-center">
                 <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fa fa-user me-sm-1 cursor-pointer" style="font-size: x-large;"></i>
+                  <i class="bi bi-list me-sm-1 cursor-pointer" style="font-size: x-large;"></i>
                 </a>
                 <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                  <li class="mb-2" (click)="toggleTickets(false)">
+                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                      <div class=" py-1">
+              
+                        <div class="d-flex  justify-content-between">
+                          <p class="text-sm d-inline font-weight-normal mb-1  ">
+                          All Tickets 
+                          </p>
+                          <span *ngIf="!assignedTickets" class="flex"><input type="radio" checked class=" bg-success"></span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+  
+                  <li class="mb-2" (click)="toggleTickets(true)">
+                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                      <div class=" py-1">
+              
+                        <div class="d-flex  justify-content-between">
+                          <p class="text-sm d-inline font-weight-normal mb-1  ">
+                          Assigned Tickets 
+                          </p>
+                          <span *ngIf="assignedTickets" class="flex"><input type="radio" checked class=" bg-success"></span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
                   <li class="mb-2" (click)="onSignOut()">
                     <a class="dropdown-item border-radius-md" href="javascript:;">
                       <div class="d-flex py-1">
@@ -42,7 +69,7 @@
                           <p class="text-sm font-weight-normal mb-1">
                           Sign Out 
                           </p>
-                          <p class="text-xs  mb-0">
+                          <p class="text-xs text-secondary mb-0">
                             {{user.email}}
                           </p>
                         </div>
@@ -75,19 +102,23 @@
                 
                 <div class="card-body w-80 px-0 pb-5">
                   <h5 class="ml-4 d-block text-center" >Resolved Tickets</h5>
-               <app-table  [data]="resolved"></app-table>
+               <app-table  [data]="resolved" ></app-table>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4 ">
+              <div class=" d-flex justify-content-center">
+                
+                <div class="card-body w-80 px-0 pb-5">
+                  <h5 class="ml-4 d-block text-center" >Escalated Tickets</h5>
+               <app-table  [data]="escalations"  ></app-table>
                 </div>
               </div>
             </div>
            
-            <div class="mb-4 ">
-              <div class=" d-flex justify-content-center">
-                <div class="card-body w-80 px-0 pb-5">
-                  <h5 class="ml-4 d-block text-center" >Escalated Tickets</h5>
-               <app-table [data]="escalations"></app-table>
-                </div>
-              </div>
-            </div>
+           
+          
 
           </div>
 

@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   allTicketsNumber=0
   resolvedNumber=0
   pendingNumber=0
+  assignedTickets:boolean=true
 
   
   ngOnInit(): void {
@@ -55,4 +56,43 @@ export class ProfileComponent implements OnInit {
     this.service.signOut();
     location.reload();
   }
+
+  toggleTickets(value:boolean){
+     this.assignedTickets=value
+     switch(this.assignedTickets){
+       case true :
+        this.service.getAllTicketsAssigned(this.user.omUsername).subscribe(
+          (res) => {
+            this.allTickets = res;
+            this.resolved = this.allTickets.filter(
+              (ticket) => ticket.ticketStatus == 'RESOLVED'
+            );
+            this.allTicketsNumber=this.allTickets.length;
+            this.resolvedNumber=this.resolved.length;
+            this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
+          },
+          (error) => console.log(console.log(error))
+        );
+          break;
+        
+        case false: 
+        this.service.getAllTickets().subscribe(
+          (res) => {
+            this.allTickets = res;
+            this.resolved = this.allTickets.filter(
+              (ticket) => ticket.ticketStatus == 'RESOLVED'
+            );
+            this.allTicketsNumber=this.allTickets.length;
+            this.resolvedNumber=this.resolved.length;
+            this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
+          },
+          (error) => console.log(console.log(error))
+        );
+        break;
+            
+        
+       
+     }
+   }
 }
+
