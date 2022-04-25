@@ -6,3 +6,9 @@
     border-radius: 20px;
 }
 
+.create-account-p:hover{
+    text-decoration:underline;
+    cursor:pointer;
+
+}
+

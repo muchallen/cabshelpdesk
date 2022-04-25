@@ -292,7 +292,7 @@ updateTableData(option:number,value:String){
   }
 
   getUser(){
-    const data = localStorage.getItem('user')
+    const data = sessionStorage.getItem('user')
     this.user=JSON.parse(data||'{}')
    }
 

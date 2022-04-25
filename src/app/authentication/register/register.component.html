@@ -18,34 +18,35 @@
                       <h3 class="font-weight-bolder text-success text-gradient">Create Account</h3>
                     </div>
                     <div class="card-body">
-                      <form role="form"  #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+                      <form role="form"  #f2="ngForm" (ngSubmit)="onSubmit(f2)"  autocomplete="off">
                         <label>First Name</label>
                         <div class="mb-3">
-                          <input type="text" class="form-control" ngModel name="firstname" #firstname="ngModel"  aria-label="First Name" aria-describedby="First Name-addon">
+                          <input type="text" class="form-control" ngModel name="firstname" #firstname="ngModel" required  aria-label="First Name" aria-describedby="First Name-addon">
                         </div>
                         <label>Last Name</label>
                         <div class="mb-3">
-                          <input type="text" class="form-control" ngModel name="lastname" #lastname="ngModel"  aria-label="Last Name" aria-describedby="Last Name-addon">
+                          <input type="text" class="form-control" ngModel name="lastname" #lastname="ngModel" required  aria-label="Last Name" aria-describedby="Last Name-addon">
                         </div>
                         <label>Email</label>
                         <div class="mb-3">
-                          <input type="text" class="form-control" ngModel name="email" #email="ngModel"  aria-label="OM Email" aria-describedby="OM Email-addon">
+                          <input type="email" class="form-control" ngModel name="email" #email="ngModel"  aria-label="OM Email" required aria-describedby="OM Email-addon">
                         </div>
                         <label>OM Username</label>
                         <div class="mb-3">
-                          <input type="text" class="form-control" ngModel name="omUsername" #omUsername="ngModel"  aria-label="OM Username" aria-describedby="OM Username-addon">
+                          <input type="text" class="form-control" ngModel name="omUsername" required #omUsername="ngModel"  aria-label="OM Username" aria-describedby="OM Username-addon">
                         </div>
                         <label>OM Password</label>
                         <div class="mb-3">
-                          <input type="password" ngModel name="omPassword" #omPassword="ngModel" class="form-control" aria-label="OM Password" aria-describedby="OM Password-addon">
+                          <input type="password" ngModel name="omPassword" required #omPassword="ngModel" class="form-control" aria-label="OM Password" aria-describedby="OM Password-addon">
                         </div>
                         <label>Role</label>
                         <div class="mb-3">
-                          <select  ngModel name="role" #role="ngModel"  class="select-item" ><option> Administrator</option> <option> User</option></select>
-
+                          <select  ngModel name="role" #role="ngModel" required  class="select-item" ><option> Admin</option> <option> User</option></select>
                         </div>
                         <div class="text-center">
-                          <button type="submit" class="btn bg-gradient-success w-100 mt-4 mb-0">Create Account</button>
+                          <button type="submit" [disabled]="!f2.valid"  class="btn bg-gradient-success w-100 mt-4 mb-0">
+                          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-3" role="status" aria-hidden="true"></span>
+                               Create Account</button>
                         </div>
                       </form>
                     </div>

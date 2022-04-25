@@ -40,8 +40,8 @@ export class ServicesService {
       'Authorization': 'Basic ' + btoa('lrsusername:lrsadminpassword')
     })
   };
-   url = "http://localhost:8080/whatsappbot/"
-
+   //url = "http://localhost:8080/whatsappbot/"
+    url = "https://whatsappbot-cabs.herokuapp.com/whatsappbot/"
 
   constructor(private http:HttpClient) { 
 
@@ -91,7 +91,7 @@ export class ServicesService {
   }
 
   signOut(){
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
   }
 
   getAllStatus():Observable<String[]>{

@@ -12,7 +12,7 @@ export class AuthServiceService {
    public isAuthenticated(): boolean {
      
 
-     const token = localStorage.getItem('user'||false);
+     const token = sessionStorage.getItem('user'||false);
      if(token)
     return true;
     else

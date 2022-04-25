@@ -40,8 +40,10 @@ export class TicketsComponent implements OnInit {
   onGetAllTickets() {
     
     this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(res=>{
-      this.allTickets=res
-      this.escalations= this.allTickets.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
+      this.allTickets=res.sort(function(a,b){
+        return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+      });
+       this.escalations= this.allTickets.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
        this.resolved= this.allTickets.filter(ticket=>ticket.ticketStatus =="RESOLVED")
        this.unresolved=this.allTickets.filter(ticket=>ticket.ticketStatus !="RESOLVED")
       this.loading=false
@@ -56,8 +58,10 @@ export class TicketsComponent implements OnInit {
     document.querySelector('#tickets')?.classList.add('active');
   }
 
+
+
   getUser(){
-    const data = localStorage.getItem('user')
+    const data = sessionStorage.getItem('user')
     this.user=JSON.parse(data||'{}')
    }
    onSignOut(){
@@ -72,9 +76,15 @@ export class TicketsComponent implements OnInit {
       case true :
            this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
            (res) => {
-            this.escalations= res.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
-            this.resolved= res.filter(ticket=>ticket.ticketStatus =="RESOLVED")
-            this.unresolved=res.filter(ticket=>ticket.ticketStatus !="RESOLVED")
+            this.escalations= res.sort(function(a,b){
+              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+            }).filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
+            this.resolved= res.sort(function(a,b){
+              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+            }).filter(ticket=>ticket.ticketStatus =="RESOLVED")
+            this.unresolved=res.sort(function(a,b){
+              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+            }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
            this.loading=false
          },error=>console.log(console.log(error)));
          break;
@@ -82,9 +92,15 @@ export class TicketsComponent implements OnInit {
           
           this.services.getAllTickets().subscribe(
           (res) => {
-           this.escalations= res.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
-           this.resolved= res.filter(ticket=>ticket.ticketStatus =="RESOLVED")
-           this.unresolved=res.filter(ticket=>ticket.ticketStatus !="RESOLVED")
+           this.escalations= res.sort(function(a,b){
+            return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+          }).filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
+           this.resolved= res.sort(function(a,b){
+            return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
+          }).filter(ticket=>ticket.ticketStatus =="RESOLVED")
+           this.unresolved=res.sort(function(a,b){
+            return new Date(a.dateCreated).getDay() - new Date(b.dateCreated).getDay();
+          }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
            console.log(res)
           this.loading=false
         },error=>console.log(console.log(error)));
@@ -94,5 +110,7 @@ export class TicketsComponent implements OnInit {
       
     }
   }
+
+
 
 }

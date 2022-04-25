@@ -337,7 +337,7 @@ export class TicketComponent implements OnInit {
   }
 
   getUser() {
-    const data = localStorage.getItem('user');
+    const data = sessionStorage.getItem('user');
     this.user = JSON.parse(data || '{}');
   }
 

@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     this.services.signInUser(data.value).subscribe(
       (res) => {
         document.cookie="auth"
-        localStorage.setItem('user',JSON.stringify(res))
+        sessionStorage.setItem('user',JSON.stringify(res))
         this.router.navigate(['']);
       },
       (err) =>{
