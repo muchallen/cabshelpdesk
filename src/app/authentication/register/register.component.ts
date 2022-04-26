@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(data: NgForm) {
     this.loading=true;
-    console.log(data.value)
+  
 
     this.services.createUser(data.value).subscribe((res) => {
       document.cookie="auth"

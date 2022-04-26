@@ -14,34 +14,16 @@ import { MessageModel } from './models/Message';
 })
 export class ServicesService {
 
-  selectedTicket:Ticket ={
-    id:'',
-    dateCreated:new Date,
-    lastUpdated:'',
-    closedAt:'',
-    ticketType:'',
-    assignee:'',
-    escalationLevel:'',
-    ticketStatus:'',
-    estimatedResolutionTime: "" ,
-    actualResolutionTime:    0,
-    dailyReportSent: false,
-    name:'',
-    phone:'',
-    email:'',
-    businessUnit:'',
-    description:''
-  }
-
-
+  selectedTicket!:Ticket 
    httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
       'Authorization': 'Basic ' + btoa('lrsusername:lrsadminpassword')
     })
   };
-   //url = "http://localhost:8080/whatsappbot/"
-    url = "https://whatsappbot-cabs.herokuapp.com/whatsappbot/"
+  // url = "http://localhost:8080/whatsappbot/" 
+  url = "https://e485-196-44-186-171.ngrok.io/whatsappbot/"
+  valy = parseInt(this.url)
 
   constructor(private http:HttpClient) { 
 

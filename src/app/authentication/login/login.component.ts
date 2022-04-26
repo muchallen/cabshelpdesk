@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   onSubmit(data: NgForm) {
     this.loading=true
    
-    console.log(data.value);
+   
     this.services.signInUser(data.value).subscribe(
       (res) => {
         document.cookie="auth"

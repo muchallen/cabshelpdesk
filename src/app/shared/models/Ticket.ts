@@ -15,4 +15,5 @@ export interface Ticket {
     email:                   string;
     businessUnit:            string;
     description:             string;
+    ticketID:                string;
 }

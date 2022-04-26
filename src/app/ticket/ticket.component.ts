@@ -27,10 +27,14 @@ export class TicketComponent implements OnInit {
   messages: MessageModel[] = [];
   showComments = true;
   searchArrayUsers: User[] = [];
+  assignee="";
 
   constructor(private services: ServicesService, private router: Router) {}
 
   ngOnInit(): void {
+    if(this.services.selectedTicket==null){
+      this.router.navigate(['/tickets'])
+    }
     this.changeNavLink();
     this.ticket = this.services.selectedTicket;
     this.getAllUsers();
@@ -39,6 +43,16 @@ export class TicketComponent implements OnInit {
     this.getCommentsByTicketId();
     this.getUser();
     this.getAllMessages();
+   
+
+  }
+
+
+  getAssignee(){
+   let user = this.AllUsers.filter(user=>user.omUsername==this.services.selectedTicket.assignee)[0]
+   
+  this.assignee = user.firstname +" "+ user.lastname
+
   }
   changeNavLink = () => {
     document
@@ -65,28 +79,25 @@ export class TicketComponent implements OnInit {
     }
     const data = {
       escalationLevel: val.value.escalationLevel,
-      id: this.ticket.id,
+      ticketID: this.ticket.ticketID,
       manager: this.user.manager,
     };
     let comment = val.value.comment;
     let commentPayload = {
       comment: comment,
       creator: this.user.firstname + ' ' + this.user.lastname,
-      ticketID: this.ticket.id,
+      ticketID: this.ticket.ticketID,
     };
-
-    console.log(data, commentPayload);
 
     if (comment != '') {
       this.services.createComment(commentPayload).subscribe(
         (res) => console.log(res),
         (err) => console.log(err),
-        () => console.log('done creating comment')
+        () => console.log()
       );
     }
     this.services.escalateTicket(data).subscribe(
       (res) => {
-        console.log(res);
         Swal.fire(
           'Success!',
           'Your ticket has been escaleted to  ' + data.escalationLevel,
@@ -109,7 +120,7 @@ export class TicketComponent implements OnInit {
           }
         });
       },
-      () => console.log('done escalating')
+     
     );
   }
 
@@ -121,29 +132,26 @@ export class TicketComponent implements OnInit {
     }
     const data = {
       assignee: this.selectedUser.omUsername,
-      id: this.ticket.id,
+      ticketID: this.ticket.ticketID,
     };
 
     let comment = val.value.comment;
     let commentPayload = {
       comment: comment,
       creator: this.user.firstname + ' ' + this.user.lastname,
-      ticketID: this.ticket.id,
+      ticketID: this.ticket.ticketID,
     };
 
-    console.log(data, commentPayload);
 
     if (comment != '') {
       this.services.createComment(commentPayload).subscribe(
         (res) => console.log(res),
         (err) => console.log(err),
-        () => console.log('done creating comment')
       );
     }
 
     this.services.reassignTicket(data).subscribe(
       (res) => {
-        console.log(res);
         Swal.fire(
           'Success!',
           'Your ticket has been assigned to  ' +
@@ -174,12 +182,11 @@ export class TicketComponent implements OnInit {
   }
 
   handleDelete() {
-    this.services.deleteTicket(this.ticket.id).subscribe(
+    this.services.deleteTicket(this.ticket.ticketID).subscribe(
       (res) => {
-        console.log(res);
         Swal.fire(
           'Success!',
-          'You have successfully deleted a ticket with ID ' + this.ticket.id,
+          'You have successfully deleted a ticket with ID ' + this.ticket.ticketID,
           'success'
         ).then((result) => {
           if (result.isConfirmed) {
@@ -199,31 +206,29 @@ export class TicketComponent implements OnInit {
           }
         });
       },
-      () => console.log('done escalating')
+
     );
   }
 
   handleChangeStatus(form: NgForm) {
     this.loading = true;
-    console.log(form.value.ticketStatus);
     if (form.value.ticketStatus == '' || form.value.ticketStatus == 'select') {
       this.loading = false;
       return;
     }
 
-    const data = { ...form.value, id: this.ticket.id };
+    const data = { ...form.value, id: this.ticket.ticketID };
     if (form.value.ticketStatus == 'RESOLVED') {
       this.services
         .escalateTicket({
           escalationLevel: 'NORMAL',
-          id: this.ticket.id,
+          ticketID: this.ticket.ticketID,
           manager: this.user.manager,
         })
         .subscribe(
           (res) => {
             this.services.changeStatus(data).subscribe(
               (res) => {
-                console.log(res);
 
                 Swal.fire(
                   'Success!',
@@ -249,17 +254,17 @@ export class TicketComponent implements OnInit {
                 });
                 console.log(err);
               },
-              () => console.log('done updating status')
+            
             );
-            console.log();
+  
           },
           (err) => console.log(err),
-          () => console.log('done escalating')
+         
         );
     } else {
       this.services.changeStatus(data).subscribe(
         (res) => {
-          console.log(res);
+          
 
           Swal.fire(
             'Success!',
@@ -285,16 +290,20 @@ export class TicketComponent implements OnInit {
           });
           console.log(err);
         },
-        () => console.log('done updating status')
+  
       );
     }
   }
 
   getAllUsers() {
     this.services.getAllUsers().subscribe(
-      (res) => (this.AllUsers = res),
+      (res) => {
+       
+        this.AllUsers = res
+        this.getAssignee();
+      },
       (err) => console.log(err),
-      () => console.log('done getting users')
+    
     );
   }
 
@@ -342,11 +351,11 @@ export class TicketComponent implements OnInit {
   }
 
 getCommentsByTicketId() {
-    this.services.getAllCommentsByTicketId(this.ticket.id).subscribe(
+    this.services.getAllCommentsByTicketId(this.ticket.ticketID).subscribe(
       (res) => {
         this.comments = res;
 
-        console.log(this.comments);
+
       },
       (err) => console.log(err),
       () => console.log('done getting commnents')
@@ -360,7 +369,7 @@ getCommentsByTicketId() {
       dateCreated: new Date(),
       message: form.value.message,
       phone: this.ticket.phone,
-      ticketID: this.ticket.id,
+      ticketID: this.ticket.ticketID,
     };
 
     this.services.sendMessageToClient(data).subscribe(
@@ -398,7 +407,7 @@ getCommentsByTicketId() {
   }
 
   getAllMessages() {
-    this.services.getMessagesByTicketId(this.ticket.id).subscribe(
+    this.services.getMessagesByTicketId(this.ticket.ticketID).subscribe(
       (res) => {
         this.messages = res;
       },

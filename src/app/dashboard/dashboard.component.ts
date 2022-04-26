@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit {
         this.resolved = this.allTickets.filter(
           (ticket) => ticket.ticketStatus != 'RESOLVED'
         );
-        console.log(res);
+       
         this.getEscalationsNumbers();
         this.getStatusNumbers();
         this.getMonthlyResolvedStatistics();
@@ -104,11 +104,11 @@ export class DashboardComponent implements OnInit {
   };
 
   chartClicked(event: any) {
-    console.log(event);
+   
   }
 
   chartHovered(event: any) {
-    console.log(event);
+    
   }
 
   changeNavLink = () => {
@@ -311,7 +311,7 @@ updateTableData(option:number,value:String){
               this.resolved = this.allTickets.filter(
                 (ticket) => ticket.ticketStatus != 'RESOLVED'
               );
-              console.log(res);
+            
               this.getEscalationsNumbers();
               this.getStatusNumbers();
               this.getMonthlyResolvedStatistics();
@@ -328,7 +328,7 @@ updateTableData(option:number,value:String){
             this.resolved = this.allTickets.filter(
               (ticket) => ticket.ticketStatus != 'RESOLVED'
             );
-            console.log(res);
+  
             this.getEscalationsNumbers();
             this.getStatusNumbers();
             this.getMonthlyResolvedStatistics();
