@@ -1,5 +1,6 @@
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
@@ -13,7 +14,7 @@ import { ServicesService } from '../shared/services.service';
 export class ProfileComponent implements OnInit {
   resolved!: Ticket[];
 
-  constructor(private service:ServicesService) { }
+  constructor(private service:ServicesService, private router:Router) { }
   user!:User
   allTickets!:Ticket[] 
   allTicketsNumber=0
@@ -44,7 +45,7 @@ export class ProfileComponent implements OnInit {
         this.resolvedNumber=this.resolved.length;
         this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
       },
-      (error) => console.log(console.log(error))
+      (error) => this.router.navigate(['/error'])
     );
   }
 
@@ -71,7 +72,7 @@ export class ProfileComponent implements OnInit {
             this.resolvedNumber=this.resolved.length;
             this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
           },
-          (error) => console.log(console.log(error))
+          (error) => this.router.navigate(['/error'])
         );
           break;
         
@@ -86,7 +87,7 @@ export class ProfileComponent implements OnInit {
             this.resolvedNumber=this.resolved.length;
             this.pendingNumber = this.allTicketsNumber-this.resolvedNumber
           },
-          (error) => console.log(console.log(error))
+          (error) => this.router.navigate(['/error'])
         );
         break;
             

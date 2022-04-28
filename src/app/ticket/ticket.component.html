@@ -78,18 +78,7 @@
                     </div>
                   </a>
                 </li>
-                <li class="mb-2" data-bs-toggle="modal" data-bs-target="#reply-modal">
-                  <a class="dropdown-item border-radius-md" >
-                    <div class="d-flex py-1">
-            
-                      <div class="d-flex flex-column justify-content-center">
-                        <p class="text-sm font-weight-normal mb-1"  >
-                        Reply
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
+                
 
                 <li class="mb-2" (click)="handleDelete()">
                   <a class="dropdown-item border-radius-md" >
@@ -177,7 +166,7 @@
                   <label *ngIf="showComments" (click)="toggleShowComments(false)" class="form-label ">Messages</label>
                    	<label *ngIf="!showComments" (click)="toggleShowComments(true)" class="form-label ">Comments</label> 
                      <label *ngIf="!showComments" (click)="toggleShowComments(false)" class="form-label card d-inline p-2 mb-4">Messages</label> 
-                  <div class="bg-secondary-soft p-4 mt-2" style="height:200px;overflow: auto;">
+                  <div id="scrol" class="bg-secondary-soft p-4 mt-2" style="height:200px; overflow: scroll;">
                       <div *ngIf="showComments" >
                     <div *ngFor="let comm of comments; let i = index"class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
                       <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:aquamarine; width: 50px; height: 50px"  >{{comm.creator.substring(0,1)}}</div>
@@ -189,7 +178,9 @@
                           <div class="text-muted d-flex justify-content-end"><small timeago [date]="comm.dateCreated"  class=" font-weight-bold ml-0"></small></div> 
                       </div>
                   </div>
+                  
                 </div>
+                
                   <div  *ngIf="!showComments" >
                   <div *ngFor="let message of messages; let i = index"class="comment-item  d-flex p-3 mb-3" style="border-radius:10px" >
                     <div  class="mr-3 rounded-circle d-flex justify-content-center align-items-center"   style="background-color:bisque; width: 50px; height: 50px"  >{{message.creator.substring(0,1)}}</div>
@@ -202,9 +193,17 @@
                     </div>
                 </div>
               </div>
-                  
+              
              
 								</div>
+                <form class="d-flex mt-2"   *ngIf="showComments"  #Comment="ngForm" (ngSubmit)="sendComment(Comment)" autocomplete="off" novalidate >
+                  <input type="text" class="form-control bg-secondary-soft"  ngModel name="comment1" #comment1="ngModel"    placeholder="Comment" ><button type="submit" class="btn btn-success p-2 px-3 mx-2"><i class="bi bi-send fs-6"></i></button>
+                </form>
+
+                <form class="d-flex mt-2"   *ngIf="!showComments" #Message="ngForm" (ngSubmit)="sendMessage(Message)" autocomplete="off" novalidate >
+                  <input type="text" class="form-control bg-secondary-soft"  ngModel name="message1" #message1="ngModel"    placeholder="Message" ><button type="submit" class="btn btn-success p-2 px-3 mx-2"><i class="bi bi-send fs-6"></i></button>
+                </form>
+                    
                 </div>
 
 							</div> <!-- Row END -->

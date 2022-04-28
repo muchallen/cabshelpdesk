@@ -21,6 +21,7 @@ import { TableComponent } from './components/table/table.component';
 // import { TableescalationsComponent } from './components/tableescalations/tableescalations.component';
 import { TicketComponent } from './ticket/ticket.component';
 import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } from 'ngx-timeago';
+import { ErrorcomponentComponent } from './errorcomponent/errorcomponent.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { TimeagoModule, TimeagoIntl, TimeagoFormatter, TimeagoCustomFormatter } 
     SidebarComponent,
     HeaderComponent,
     TableComponent,
-    TicketComponent
+    TicketComponent,
+    ErrorcomponentComponent
   ],
   imports: [
     HttpClientModule,

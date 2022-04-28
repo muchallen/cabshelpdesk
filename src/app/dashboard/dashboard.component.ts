@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { tick } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
@@ -33,7 +34,7 @@ export class DashboardComponent implements OnInit {
   monthsResolved!: [Ticket[]] 
   monthsPending: any[] = [];
 
-  constructor(private services: ServicesService) {}
+  constructor(private services: ServicesService, private router:Router) {}
 
   ngOnInit(): void {
     this.changeNavLink();
@@ -55,7 +56,7 @@ export class DashboardComponent implements OnInit {
         this.getMonthlyResolvedStatistics();
         this.loading = false;
       },
-      (error) => console.log(console.log(error))
+      (error) => this.router.navigate(['/error'])
     );
   }
   chartType = 'line';
@@ -317,7 +318,7 @@ updateTableData(option:number,value:String){
               this.getMonthlyResolvedStatistics();
               this.loading = false;
             },
-            (error) => console.log(console.log(error))
+            (error) => this.router.navigate(['/error'])
           );
           break;
         
@@ -334,7 +335,7 @@ updateTableData(option:number,value:String){
             this.getMonthlyResolvedStatistics();
             this.loading = false;
           },
-          (error) => console.log(console.log(error))
+          (error) => this.router.navigate(['/error'])
         );
         break;
             

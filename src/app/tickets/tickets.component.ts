@@ -1,4 +1,5 @@
 import { Component, OnInit ,OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
 import { User } from '../shared/models/User';
 import { ServicesService } from '../shared/services.service';
@@ -23,7 +24,7 @@ export class TicketsComponent implements OnInit {
   number=true;
 
 
-  constructor(private services:ServicesService) { }
+  constructor(private services:ServicesService, private router:Router) { }
   
  
 
@@ -49,7 +50,8 @@ export class TicketsComponent implements OnInit {
       this.loading=false
       console.log(this.resolved+ "resolved")
       console.log(this.unresolved+ "unresolved")
-    },error=>console.log(console.log(error)));
+    },
+    (error) => this.router.navigate(['/error']));
     
   }
 
@@ -86,7 +88,7 @@ export class TicketsComponent implements OnInit {
               return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
             }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
            this.loading=false
-         },error=>console.log(console.log(error)));
+         },  (error) => this.router.navigate(['/error']));;
          break;
          case false :
           
@@ -103,7 +105,7 @@ export class TicketsComponent implements OnInit {
           }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
            console.log(res)
           this.loading=false
-        },error=>console.log(console.log(error)));
+        },  (error) => this.router.navigate(['/error']));
         break;
            
        

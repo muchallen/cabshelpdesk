@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Route, Router } from '@angular/router';
 import { Ticket } from '../shared/models/Ticket';
@@ -30,7 +30,11 @@ export class TicketComponent implements OnInit {
   assignee="";
 
   constructor(private services: ServicesService, private router: Router) {}
-
+ 
+  scrollToBottom(): void {
+    var elem = document.getElementById('scrol');
+     elem!.scrollTop = elem!.scrollHeight;          
+     }
   ngOnInit(): void {
     if(this.services.selectedTicket==null){
       this.router.navigate(['/tickets'])
@@ -43,16 +47,13 @@ export class TicketComponent implements OnInit {
     this.getCommentsByTicketId();
     this.getUser();
     this.getAllMessages();
-   
-
+    this.scrollToBottom();
   }
 
 
   getAssignee(){
    let user = this.AllUsers.filter(user=>user.omUsername==this.services.selectedTicket.assignee)[0]
-   
-  this.assignee = user.firstname +" "+ user.lastname
-
+   this.assignee = user.firstname +" "+ user.lastname
   }
   changeNavLink = () => {
     document
@@ -142,6 +143,8 @@ export class TicketComponent implements OnInit {
       ticketID: this.ticket.ticketID,
     };
 
+    console.log("comment payload ", commentPayload )
+
 
     if (comment != '') {
       this.services.createComment(commentPayload).subscribe(
@@ -191,6 +194,7 @@ export class TicketComponent implements OnInit {
         ).then((result) => {
           if (result.isConfirmed) {
             this.loading = false;
+            this.router.navigate(['/tickets'])
           }
         });
       },
@@ -217,7 +221,7 @@ export class TicketComponent implements OnInit {
       return;
     }
 
-    const data = { ...form.value, id: this.ticket.ticketID };
+    const data = { ...form.value, ticketID: this.ticket.ticketID };
     if (form.value.ticketStatus == 'RESOLVED') {
       this.services
         .escalateTicket({
@@ -425,5 +429,80 @@ getCommentsByTicketId() {
           event.value.toLocaleLowerCase()
     );
     console.log(this.searchArrayUsers);
+  }
+
+  sendComment(form:NgForm){
+      if(form.value.comment1 == ""){
+        return
+      }
+
+    let commentPayload = {
+      comment: form.value.comment1,
+      creator: this.user.firstname + ' ' + this.user.lastname,
+      ticketID: this.ticket.ticketID,
+    };
+
+    this.services.createComment(commentPayload).subscribe(
+      (res) => {
+        this.getCommentsByTicketId();
+        this.scrollToBottom();
+        form.reset()
+      },
+      (err) =>{
+        console.log(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+
+      }
+    );
+
+  }
+
+  sendMessage(form:NgForm){
+
+    if(form.value.comment1 == ""){
+      return
+    }
+
+    let data: MessageModel = {
+      creator: this.user.firstname + ' ' + this.user.lastname,
+      dateCreated: new Date(),
+      message: form.value.message1,
+      phone: this.ticket.phone,
+      ticketID: this.ticket.ticketID,
+    };
+
+    this.services.sendMessageToClient(data).subscribe(
+      (res) => {
+        this.getAllMessages()
+        this.scrollToBottom();
+        form.reset()
+       
+      },
+      (err) => {
+        console.log(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'An error has occured please try again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.loading = false;
+          }
+        });
+      },
+      () => console.log('done sending message')
+    );
+
+    
   }
 }

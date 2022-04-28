@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './authentication/login/login.component';
 import { RegisterComponent } from './authentication/register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ErrorcomponentComponent } from './errorcomponent/errorcomponent.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path:"reports",component: ReportsComponent,canActivate:[AuthGuardServiceService] },
   {path:"profile",component: ProfileComponent,canActivate:[AuthGuardServiceService] },
   {path:"create-account",component: RegisterComponent},
+  {path:"error",component: ErrorcomponentComponent},
   {path:"ticket",component: TicketComponent,canActivate:[AuthGuardServiceService] }
 ];
 

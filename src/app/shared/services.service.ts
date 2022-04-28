@@ -22,8 +22,7 @@ export class ServicesService {
     })
   };
   // url = "http://localhost:8080/whatsappbot/" 
-  url = "https://e485-196-44-186-171.ngrok.io/whatsappbot/"
-  valy = parseInt(this.url)
+   url = "https://e485-196-44-186-171.ngrok.io/whatsappbot/"
 
   constructor(private http:HttpClient) { 
 
