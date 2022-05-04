@@ -19,7 +19,7 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
          
-          <h6 class="font-weight-bolder mb-0">Escalations</h6>
+         
         </nav>
         
 
@@ -90,6 +90,8 @@
     <!-- End Navbar -->
     <div class="container-fluid  py-4">
      <div *ngIf="!loading" class="">
+      <h6 class="font-weight-bolder mb-0">Escalations</h6>
+      <br>
       <div class="row">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4"  data-bs-toggle="modal" data-bs-target="#table-modal" (click)="updateTableData(1,'NORMAL')">
           <div class="card">

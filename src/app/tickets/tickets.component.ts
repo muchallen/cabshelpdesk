@@ -33,23 +33,15 @@ export class TicketsComponent implements OnInit {
     this.changeNavLink();
     this.getUser();
     this.onGetAllTickets();
+   
   }
 
 
-  
-
   onGetAllTickets() {
     
-    this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(res=>{
-      this.allTickets=res.sort(function(a,b){
-        return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-      });
-       this.escalations= this.allTickets.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
-       this.resolved= this.allTickets.filter(ticket=>ticket.ticketStatus =="RESOLVED")
-       this.unresolved=this.allTickets.filter(ticket=>ticket.ticketStatus !="RESOLVED")
-      this.loading=false
-      console.log(this.resolved+ "resolved")
-      console.log(this.unresolved+ "unresolved")
+      this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(res=>{
+      this.filterequals(res)
+      this.loading=false  
     },
     (error) => this.router.navigate(['/error']));
     
@@ -71,6 +63,22 @@ export class TicketsComponent implements OnInit {
     location.reload();
   }
 
+
+   filterequals( ticketsArray:Ticket[]) {
+ 
+    this.escalations = ticketsArray.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED").sort(function(a,b){
+      return Date.parse(b.dateCreated.toString()) - Date.parse(a.dateCreated.toString());
+    });
+
+    
+    this.resolved = ticketsArray.filter(ticket=>ticket.ticketStatus =="RESOLVED").sort(function(a,b){
+      return Date.parse(b.dateCreated.toString()) - Date.parse(a.dateCreated.toString());
+    });
+    this.unresolved= ticketsArray.filter(ticket=>ticket.ticketStatus !="RESOLVED").sort(function(a,b){
+      return Date.parse(b.dateCreated.toString()) - Date.parse(a.dateCreated.toString());;
+    });
+  }
+
   toggleTickets(value:boolean){
 
     this.assignedTickets=value
@@ -78,32 +86,15 @@ export class TicketsComponent implements OnInit {
       case true :
            this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
            (res) => {
-            this.escalations= res.sort(function(a,b){
-              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-            }).filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
-            this.resolved= res.sort(function(a,b){
-              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-            }).filter(ticket=>ticket.ticketStatus =="RESOLVED")
-            this.unresolved=res.sort(function(a,b){
-              return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-            }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
-           this.loading=false
+            this.filterequals(res)
+            this.loading=false
          },  (error) => this.router.navigate(['/error']));;
          break;
          case false :
           
           this.services.getAllTickets().subscribe(
           (res) => {
-           this.escalations= res.sort(function(a,b){
-            return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-          }).filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED")
-           this.resolved= res.sort(function(a,b){
-            return new Date(a.dateCreated).getDay () - new Date(b.dateCreated).getDay ();
-          }).filter(ticket=>ticket.ticketStatus =="RESOLVED")
-           this.unresolved=res.sort(function(a,b){
-            return new Date(a.dateCreated).getDay() - new Date(b.dateCreated).getDay();
-          }).filter(ticket=>ticket.ticketStatus !="RESOLVED")
-           console.log(res)
+            this.filterequals(res)
           this.loading=false
         },  (error) => this.router.navigate(['/error']));
         break;
