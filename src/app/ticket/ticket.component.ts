@@ -357,9 +357,9 @@ export class TicketComponent implements OnInit {
 getCommentsByTicketId() {
     this.services.getAllCommentsByTicketId(this.ticket.ticketID).subscribe(
       (res) => {
-        this.comments = res;
-
-
+        this.comments = res.sort(function(a,b){
+          return Date.parse(a.dateCreated.toString()) - Date.parse(b.dateCreated.toString());
+        });
       },
       (err) => console.log(err),
       () => console.log('done getting commnents')
@@ -413,12 +413,17 @@ getCommentsByTicketId() {
   getAllMessages() {
     this.services.getMessagesByTicketId(this.ticket.ticketID).subscribe(
       (res) => {
-        this.messages = res;
+        this.messages = res.sort(function(a,b){
+          return Date.parse(a.dateCreated.toString()) - Date.parse(b.dateCreated.toString());
+        });
       },
       (err) => console.log(err),
       () => console.log('done getting messages')
     );
   }
+
+ 
+
 
   handleSearch(event: any) {
     this.searchArrayUsers = this.AllUsers.filter(

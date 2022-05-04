@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
     // this.chartDatasets = this.chartDatasetsMonthly;
    
   }
+
   onGetAllTickets() {
     this.services.getAllTicketsAssigned(this.user.omUsername).subscribe(
       (res) => {

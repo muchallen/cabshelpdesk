@@ -65,12 +65,9 @@ export class TicketsComponent implements OnInit {
 
 
    filterequals( ticketsArray:Ticket[]) {
- 
     this.escalations = ticketsArray.filter(ticket=>ticket.escalationLevel !="NORMAL" && ticket.ticketStatus!="RESOLVED").sort(function(a,b){
       return Date.parse(b.dateCreated.toString()) - Date.parse(a.dateCreated.toString());
     });
-
-    
     this.resolved = ticketsArray.filter(ticket=>ticket.ticketStatus =="RESOLVED").sort(function(a,b){
       return Date.parse(b.dateCreated.toString()) - Date.parse(a.dateCreated.toString());
     });
