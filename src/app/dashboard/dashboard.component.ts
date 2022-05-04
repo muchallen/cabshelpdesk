@@ -180,7 +180,7 @@ updateTableData(option:number,value:String){
       this.getMonthlyResolvedStatistics();
     }
 
-    if (data.value == 'Weekly') {
+    if (data.value == 'Daily') {
       this.getWeeklyResovedStatics();
     }
   }
